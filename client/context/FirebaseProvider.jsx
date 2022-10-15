@@ -10,6 +10,7 @@ import {
   getFirestore,
   orderBy,
   limit,
+  doc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -92,7 +93,7 @@ const getGigs = async (order = "rating", lim = 10, condition = null) => {
     const docSnap = await getDocs(docRef);
     let res = [];
     docSnap.forEach((doc) => {
-      res.push(doc.data());
+      res.push({ ...doc.data(), id: doc.id });
     });
     console.log(res);
     return res;
@@ -137,10 +138,23 @@ const getOrders = async (order = "timestamp", lim = 10, condition = null) => {
     const docSnap = await getDocs(docRef);
     let res = [];
     docSnap.forEach((doc) => {
-      res.push(doc.data());
+      res.push({ ...doc.data(), id: doc.id });
     });
     console.log(res);
     return res;
+  } catch (error) {
+    throw error;
+  }
+};
+const fetchGigDetails = async (gigId) => {
+  try {
+    const docRef = doc(db, "gigs", gigId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return {};
+    }
   } catch (error) {
     throw error;
   }
@@ -156,6 +170,7 @@ function FirebaseProvider({ children }) {
     getGigs,
     createOrder,
     getOrders,
+    fetchGigDetails,
   };
 
   useEffect(() => {

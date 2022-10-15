@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Flex,
   Box,
@@ -29,59 +30,61 @@ function OrderCard({ content }) {
     fetchMetaData();
   }, []);
   return (
-    <Box
-      maxW="sm"
-      minW="xs"
-      h="xs"
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-    >
-      <Image
-        height={"150px"}
-        width={"100%"}
-        src={orderImage}
-        alt={"ipfs image"}
-        layout={"fill"}
-      />
+    <Link href={`/screens/dynamicScreens/orderScreen/${content.id}`}>
+      <Box
+        maxW="sm"
+        minW="xs"
+        h="xs"
+        borderWidth="1px"
+        borderRadius="lg"
+        overflow="hidden"
+      >
+        <Image
+          height={"150px"}
+          width={"100%"}
+          src={orderImage}
+          alt={"ipfs image"}
+          layout={"fill"}
+        />
 
-      <Box p="6">
-        <Box mt="1" as="h4" lineHeight="tight">
-          {shortenText(orderName, 40)}
-        </Box>
+        <Box p="6">
+          <Box mt="1" as="h4" lineHeight="tight">
+            {shortenText(orderName, 40)}
+          </Box>
 
-        <Flex justifyContent="space-between" alignContent="center">
-          <Rating
-            rating={content.rating}
-            numReviews={content.biddersArray.length}
-          />
-          <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
-            <Box as="span" color={"gray.600"} fontSize="lg">
-              $
+          <Flex justifyContent="space-between" alignContent="center">
+            <Rating
+              rating={content.rating}
+              numReviews={content.biddersArray.length}
+            />
+            <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
+              <Box as="span" color={"gray.600"} fontSize="lg">
+                $
+              </Box>
+              {"price"}
             </Box>
-            {"price"}
-          </Box>
-        </Flex>
-        <Flex justifyContent="space-between" alignContent="center">
-          <Tooltip
-            label="Seller's Address"
-            bg="white"
-            placement={"top"}
-            color={"gray.800"}
-            fontSize={"1.2em"}
-          >
-            <Button>{shortenAddress(content.address)}</Button>
-          </Tooltip>
-          <Box
-            fontSize="xs"
-            color={useColorModeValue("gray.800", "white")}
-            pt={5}
-          >
-            {new Date(content.timestamp).toDateString()}
-          </Box>
-        </Flex>
+          </Flex>
+          <Flex justifyContent="space-between" alignContent="center">
+            <Tooltip
+              label="Seller's Address"
+              bg="white"
+              placement={"top"}
+              color={"gray.800"}
+              fontSize={"1.2em"}
+            >
+              <Button>{shortenAddress(content.address)}</Button>
+            </Tooltip>
+            <Box
+              fontSize="xs"
+              color={useColorModeValue("gray.800", "white")}
+              pt={5}
+            >
+              {new Date(content.timestamp).toDateString()}
+            </Box>
+          </Flex>
+        </Box>
       </Box>
-    </Box>
+    </Link>
   );
 }
 
