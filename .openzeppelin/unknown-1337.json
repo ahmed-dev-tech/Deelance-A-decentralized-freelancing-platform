@@ -66,6 +66,7 @@
       "address": "0x1AAA839cB044f9E4e5118E15c132fF3E4736E810",
       "txHash": "0xdbf865f4b3f3820f5d2f131d72bd29c07779bd216c3d76314200617bc09a8530",
       "layout": {
+        "solcVersion": "0.8.9",
         "storage": [
           {
             "label": "usersId",
@@ -79,7 +80,7 @@
             "label": "users",
             "offset": 0,
             "slot": "1",
-            "type": "t_mapping(t_address,t_struct(User)621_storage)",
+            "type": "t_mapping(t_address,t_struct(User)622_storage)",
             "contract": "Vault",
             "src": "contracts\\Vault.sol:16"
           },
@@ -111,7 +112,7 @@
             "label": "projects",
             "offset": 0,
             "slot": "4",
-            "type": "t_mapping(t_uint256,t_struct(Project)133_storage)",
+            "type": "t_mapping(t_uint256,t_struct(Project)134_storage)",
             "contract": "Deelance",
             "src": "contracts\\Deelance.sol:26"
           }
@@ -125,7 +126,7 @@
             "label": "address payable",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(Milestone)116_storage)dyn_storage": {
+          "t_array(t_struct(Milestone)117_storage)dyn_storage": {
             "label": "struct Deelance.Milestone[]",
             "numberOfBytes": "32"
           },
@@ -133,7 +134,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(User)621_storage)": {
+          "t_mapping(t_address,t_struct(User)622_storage)": {
             "label": "mapping(address => struct Vault.User)",
             "numberOfBytes": "32"
           },
@@ -141,11 +142,11 @@
             "label": "mapping(address => uint256)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(Project)133_storage)": {
+          "t_mapping(t_uint256,t_struct(Project)134_storage)": {
             "label": "mapping(uint256 => struct Deelance.Project)",
             "numberOfBytes": "32"
           },
-          "t_struct(Milestone)116_storage": {
+          "t_struct(Milestone)117_storage": {
             "label": "struct Deelance.Milestone",
             "members": [
               {
@@ -181,7 +182,7 @@
             ],
             "numberOfBytes": "96"
           },
-          "t_struct(Project)133_storage": {
+          "t_struct(Project)134_storage": {
             "label": "struct Deelance.Project",
             "members": [
               {
@@ -204,7 +205,7 @@
               },
               {
                 "label": "milestones",
-                "type": "t_array(t_struct(Milestone)116_storage)dyn_storage",
+                "type": "t_array(t_struct(Milestone)117_storage)dyn_storage",
                 "offset": 0,
                 "slot": "3"
               },
@@ -229,7 +230,7 @@
             ],
             "numberOfBytes": "160"
           },
-          "t_struct(User)621_storage": {
+          "t_struct(User)622_storage": {
             "label": "struct Vault.User",
             "members": [
               {
