@@ -1,0 +1,1 @@
+// Manage rights to take decisions on issues and Deelance in general.
