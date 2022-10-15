@@ -102,8 +102,6 @@ contract Deelance is Vault {
         }else{
             // perform a check to know if token is actually an ERC20
             require(users[msg.sender].erc20InVault[_token]>=_amount,"not enough erc20 token in vault");
-            IERC20(_token).approve(projects[projectId].freelancer, _amount);
-            console.log(_amount,projects[projectId].freelancer);
             projects[projectId].milestones.push(Milestone(
                 deadline,
                 _amount,
@@ -128,9 +126,7 @@ contract Deelance is Vault {
             currentProject.freelancer.transfer(currentMilestone.payment);
             users[msg.sender].ethOutOfVault-=currentMilestone.payment;
         }else{
-            console.log(IERC20(currentMilestone.token).allowance(address(this), currentProject.freelancer));
-            console.log(currentProject.freelancer, currentMilestone.payment);
-            IERC20(currentMilestone.token).transferFrom(address(this), currentProject.freelancer, currentMilestone.payment);
+            IERC20(currentMilestone.token).transfer(currentProject.freelancer, currentMilestone.payment);
             users[msg.sender].erc20OutOfVault[currentMilestone.token]-=currentMilestone.payment;
         }
         currentMilestone.completed=true;

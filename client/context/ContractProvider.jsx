@@ -28,7 +28,7 @@ function ContractProvider({ children }) {
     // If the user is not connected to Mumbai, tell to switch to Mumbai
 
     const { chainId } = await web3Provider.getNetwork();
-    if (chainId !== 5777) {
+    if (chainId !== 1337) {
       window.alert("Please switch to the Mumbai network");
       throw new Error("Incorrect network");
     }
