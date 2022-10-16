@@ -76,7 +76,11 @@ function Navbar(props) {
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <Link
+                      href={`/screens/dynamicScreens/profileScreen/${address}`}
+                    >
+                      View/Edit Profile
+                    </Link>
                   </Center>
                   <br />
                   <MenuDivider />

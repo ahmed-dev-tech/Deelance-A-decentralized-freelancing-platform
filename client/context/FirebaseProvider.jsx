@@ -11,6 +11,7 @@ import {
   orderBy,
   limit,
   doc,
+  setDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -148,7 +149,41 @@ const getOrders = async (order = "timestamp", lim = 10, condition = null) => {
 };
 const fetchGigDetails = async (gigId) => {
   try {
+    console.log("gigId:", gigId);
     const docRef = doc(db, "gigs", gigId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return {};
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+const editProfile = async (address, dataObject) => {
+  try {
+    const docRef = doc(db, "profiles", address);
+    const docSnap = await getDoc(docRef);
+    let firebaseRes;
+    if (docSnap.exists()) {
+      firebaseRes = await updateDoc(docRef, dataObject);
+    } else {
+      firebaseRes = await setDoc(docRef, {
+        ...dataObject,
+        clientRating: 0,
+        sellerRating: 0,
+        clientReviewers: [],
+        sellerReviewers: [],
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+const getUserProfile = async (address) => {
+  try {
+    const docRef = doc(db, "profiles", address);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return docSnap.data();
@@ -171,6 +206,8 @@ function FirebaseProvider({ children }) {
     createOrder,
     getOrders,
     fetchGigDetails,
+    editProfile,
+    getUserProfile,
   };
 
   useEffect(() => {

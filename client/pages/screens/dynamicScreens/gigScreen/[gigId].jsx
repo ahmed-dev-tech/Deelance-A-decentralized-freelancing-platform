@@ -10,6 +10,7 @@ import {
   Text,
   Button,
   Image,
+  Avatar,
 } from "@chakra-ui/react";
 import Navbar from "../../../../components/molecules/Navbar";
 import { FirebaseContext } from "../../../../context/FirebaseProvider";
@@ -61,32 +62,37 @@ function GigPage(req, res) {
               </Text>
             </Heading>
             <Text color={"gray.500"}>{gigDetails.description}</Text>
-            <Stack
-              spacing={{ base: 4, sm: 6 }}
-              direction={{ base: "column", sm: "row" }}
-            >
-              <Link href={"/screens/App"}>
-                <Button
-                  colorScheme={"teal"}
-                  rounded={"full"}
-                  size={"lg"}
-                  fontWeight={"normal"}
-                  px={6}
-                >
-                  Contact Seller
-                </Button>
-              </Link>
-              <Link href={"/screens/App"}>
-                <Button
-                  colorScheme={"blue"}
-                  rounded={"full"}
-                  size={"lg"}
-                  fontWeight={"normal"}
-                  px={6}
-                >
-                  Order Seller
-                </Button>
-              </Link>
+            <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
+              <Avatar
+                src={"https://avatars0.githubusercontent.com/u/1164541?v=4"}
+                alt={"Author"}
+              />
+              <Stack direction={"row"} spacing={0} fontSize={"sm"}>
+                <Text fontWeight={600}>Achim Rolle</Text>
+                <Text color={"gray.500"}>Feb 08, 2021 · 6min read</Text>
+                <Link href={"/screens/App"}>
+                  <Button
+                    colorScheme={"teal"}
+                    rounded={"full"}
+                    size={"lg"}
+                    fontWeight={"normal"}
+                    px={6}
+                  >
+                    Contact Seller
+                  </Button>
+                </Link>
+                <Link href={"/screens/App"}>
+                  <Button
+                    colorScheme={"blue"}
+                    rounded={"full"}
+                    size={"lg"}
+                    fontWeight={"normal"}
+                    px={6}
+                  >
+                    Order Seller
+                  </Button>
+                </Link>
+              </Stack>
             </Stack>
           </Stack>
           <Flex
