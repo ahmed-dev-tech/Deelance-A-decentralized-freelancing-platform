@@ -15,15 +15,29 @@ import {
 import Navbar from "../../../../components/molecules/Navbar";
 import { FirebaseContext } from "../../../../context/FirebaseProvider";
 import axios from "axios";
+import { UtilitiesContext } from "../../../../context/UtilitiesProvider";
 
 function GigPage(req, res) {
   const router = useRouter();
   const { gigId } = router.query;
 
-  const { fetchGigDetails } = useContext(FirebaseContext);
-
+  const { fetchGigDetails, getUserProfile } = useContext(FirebaseContext);
+  const { shortenText } = useContext(UtilitiesContext);
   const [gigDetails, setGigDetails] = useState({});
+  const [sellerInfo, setSellerInfo] = useState({});
 
+  const fetchSellerInfo = async (address) => {
+    const res = await getUserProfile(address);
+    let ipfsRes = await axios.get(
+      `https://${res.ipfsHash}.ipfs.ipfs-gateway.cloud/metadata.json`
+    );
+    const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
+    setSellerInfo({
+      name: ipfsRes.data.name,
+      bio: ipfsRes.data.description,
+      image: `https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`,
+    });
+  };
   const prepareGigDetails = async () => {
     const firebaseRes = await fetchGigDetails(gigId);
     let ipfsRes = await axios.get(
@@ -38,9 +52,11 @@ function GigPage(req, res) {
     });
   };
   useEffect(() => {
-    prepareGigDetails();
-  }, []);
-  console.log(gigDetails);
+    gigId && prepareGigDetails();
+  }, [gigId]);
+  useEffect(() => {
+    gigDetails.address && fetchSellerInfo(gigDetails.address);
+  }, [gigDetails.address]);
   return (
     <>
       <Navbar />
@@ -62,38 +78,6 @@ function GigPage(req, res) {
               </Text>
             </Heading>
             <Text color={"gray.500"}>{gigDetails.description}</Text>
-            <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
-              <Avatar
-                src={"https://avatars0.githubusercontent.com/u/1164541?v=4"}
-                alt={"Author"}
-              />
-              <Stack direction={"row"} spacing={0} fontSize={"sm"}>
-                <Text fontWeight={600}>Achim Rolle</Text>
-                <Text color={"gray.500"}>Feb 08, 2021 · 6min read</Text>
-                <Link href={"/screens/App"}>
-                  <Button
-                    colorScheme={"teal"}
-                    rounded={"full"}
-                    size={"lg"}
-                    fontWeight={"normal"}
-                    px={6}
-                  >
-                    Contact Seller
-                  </Button>
-                </Link>
-                <Link href={"/screens/App"}>
-                  <Button
-                    colorScheme={"blue"}
-                    rounded={"full"}
-                    size={"lg"}
-                    fontWeight={"normal"}
-                    px={6}
-                  >
-                    Order Seller
-                  </Button>
-                </Link>
-              </Stack>
-            </Stack>
           </Stack>
           <Flex
             flex={1}
@@ -121,6 +105,41 @@ function GigPage(req, res) {
             </Box>
           </Flex>
         </Stack>
+        <Box rounded={"xl"} boxShadow={"xl"}>
+          <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
+            <Avatar src={sellerInfo.image} alt={"Author"} />
+            <Stack direction={"row"} spacing={0} fontSize={"sm"}>
+              <Stack direction={"column"} spacing={0} fontSize={"sm"}>
+                <Text fontWeight={600}>{sellerInfo.name}</Text>
+                <Text color={"gray.500"}>
+                  {sellerInfo.bio && shortenText(sellerInfo.bio, 25)}
+                </Text>
+              </Stack>
+              <Link href={"/screens/App"}>
+                <Button
+                  colorScheme={"teal"}
+                  rounded={"full"}
+                  size={"lg"}
+                  fontWeight={"normal"}
+                  px={6}
+                >
+                  Contact Seller
+                </Button>
+              </Link>
+              <Link href={"/screens/App"}>
+                <Button
+                  colorScheme={"blue"}
+                  rounded={"full"}
+                  size={"lg"}
+                  fontWeight={"normal"}
+                  px={6}
+                >
+                  Order Seller
+                </Button>
+              </Link>
+            </Stack>
+          </Stack>
+        </Box>
       </Container>
     </>
   );

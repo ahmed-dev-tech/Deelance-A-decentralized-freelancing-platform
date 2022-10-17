@@ -7,12 +7,16 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Heading,
   Input,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
+import Navbar from "../../../../components/molecules/Navbar";
 import ImagePicker from "../../../../components/atoms/imagePicker";
+import Rating from "../../../../components/atoms/Rating";
 
 function ProfilePage(props) {
   const router = useRouter();
@@ -68,9 +72,33 @@ function ProfilePage(props) {
   useEffect(() => {
     profileId && prepareUserProfile();
   }, [profileId]);
+  console.log(profileDetails);
   return (
     <Box>
-      <Box width={"sm"}>
+      <Navbar />
+      <Heading
+        lineHeight={1.1}
+        fontWeight={600}
+        fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+      >
+        <Text
+          as={"span"}
+          position={"relative"}
+          _after={{
+            content: "''",
+            width: "full",
+            height: "30%",
+            position: "absolute",
+            bottom: 1,
+            left: 0,
+            bg: "blue.400",
+            zIndex: -1,
+          }}
+        >
+          Edit Profile
+        </Text>
+      </Heading>
+      <Box width={"lg"} p={"5"} mx={"auto"}>
         <ImagePicker image={profileDetails.image} inputFile={inputFile} />
         <FormControl isRequired>
           <FormLabel>Name</FormLabel>
@@ -95,7 +123,6 @@ function ProfilePage(props) {
           />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel>Select an Image</FormLabel>
           <Input
             onChange={(e) => fetchFile(e)}
             ref={inputFile}
@@ -115,6 +142,89 @@ function ProfilePage(props) {
         >
           Save
         </Button>
+      </Box>
+      <Heading
+        lineHeight={1.1}
+        fontWeight={600}
+        fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+      >
+        <Text
+          as={"span"}
+          position={"relative"}
+          _after={{
+            content: "''",
+            width: "full",
+            height: "30%",
+            position: "absolute",
+            bottom: 1,
+            left: 0,
+            bg: "blue.400",
+            zIndex: -1,
+          }}
+        >
+          Client Info
+        </Text>
+      </Heading>
+
+      <Box width={"lg"} p={"5"} mx={"auto"}>
+        <Heading
+          lineHeight={1.1}
+          fontWeight={600}
+          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+        >
+          <Text as={"span"} color={"blue.400"}>
+            Rating
+          </Text>
+        </Heading>
+        <Rating
+          rating={profileDetails.clientRating || 0}
+          numReviews={
+            profileDetails.clientReviewers
+              ? profileDetails.clientReviewers.length
+              : 0
+          }
+        />
+      </Box>
+      <Heading
+        lineHeight={1.1}
+        fontWeight={600}
+        fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+      >
+        <Text
+          as={"span"}
+          position={"relative"}
+          _after={{
+            content: "''",
+            width: "full",
+            height: "30%",
+            position: "absolute",
+            bottom: 1,
+            left: 0,
+            bg: "blue.400",
+            zIndex: -1,
+          }}
+        >
+          Seller Info
+        </Text>
+      </Heading>
+      <Box width={"lg"} p={"5"} mx={"auto"}>
+        <Heading
+          lineHeight={1.1}
+          fontWeight={600}
+          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+        >
+          <Text as={"span"} color={"blue.400"}>
+            Rating
+          </Text>
+        </Heading>
+        <Rating
+          rating={profileDetails.sellerRating || 0}
+          numReviews={
+            profileDetails.sellerReviewers
+              ? profileDetails.sellerReviewers.length
+              : 0
+          }
+        />
       </Box>
     </Box>
   );
