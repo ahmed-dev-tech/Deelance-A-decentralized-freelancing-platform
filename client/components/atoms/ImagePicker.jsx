@@ -6,15 +6,16 @@ function ImagePicker({ inputFile, image }) {
   return (
     <Box
       position={"relative"}
-      height={"300px"}
+      height={"sm"}
       boxShadow={"2xl"}
-      width={"full"}
+      width={"sm"}
+      borderRadius={"full"}
       overflow={"hidden"}
-      onClick={() => {
-        inputFile.current.click();
-      }}
     >
       <IconButton
+        onClick={() => {
+          inputFile.current.click();
+        }}
         aria-label={"Play Button"}
         variant={"ghost"}
         _hover={{ bg: "transparent" }}
@@ -31,8 +32,8 @@ function ImagePicker({ inputFile, image }) {
         fit={"cover"}
         borderRadius={"full"}
         align={"center"}
-        w={"100%"}
-        h={"100%"}
+        // w={"100%"}
+        // h={"100%"}
         src={image}
       />
     </Box>

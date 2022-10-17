@@ -60,13 +60,14 @@ function ProfilePage(props) {
         bio: ipfsRes.data.description,
         image: `https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`,
       });
+      console.log(`https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`);
     } catch (error) {
       setProfileDetails({});
     }
   };
   useEffect(() => {
-    prepareUserProfile();
-  }, []);
+    profileId && prepareUserProfile();
+  }, [profileId]);
   return (
     <Box>
       <Box width={"sm"}>

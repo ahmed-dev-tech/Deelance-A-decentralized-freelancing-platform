@@ -12,6 +12,7 @@ import {
   limit,
   doc,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
