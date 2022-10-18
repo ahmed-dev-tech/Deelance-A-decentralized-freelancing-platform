@@ -15,10 +15,6 @@ function ContractProvider({ children }) {
 
   let myProvider;
 
-  const data = {
-    contract,
-    address,
-  };
   // contract address is rinkeby's
   const getProviderOrSigner = async (needSigner = false) => {
     // We need to gain access to the provider/signer from metamask
@@ -56,7 +52,14 @@ function ContractProvider({ children }) {
     myProvider.on("accountsChanged", function (accounts) {
       setAddress(accounts[0]);
     });
-
+  // Contract Interaction Functions
+  const registerFreelancer = async () => {
+    try {
+      await contract.registerFreelancer({ gasPrice: 100000000000 });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     if (isAuthenticated) {
       web3ModalRef.current = new Web3Modal({
@@ -68,7 +71,11 @@ function ContractProvider({ children }) {
       getAccounts().then((res) => setAddress(res));
     }
   }, [isAuthenticated]);
-
+  const data = {
+    contract,
+    address,
+    registerFreelancer,
+  };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>
   );

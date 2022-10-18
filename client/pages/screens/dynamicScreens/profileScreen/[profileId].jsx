@@ -21,6 +21,7 @@ import Navbar from "../../../../components/molecules/Navbar";
 import ImagePicker from "../../../../components/atoms/imagePicker";
 import Rating from "../../../../components/atoms/Rating";
 import GigCard from "../../../../components/atoms/GigCard";
+import { ContractContext } from "../../../../context/ContractProvider";
 
 function ProfilePage(props) {
   const router = useRouter();
@@ -28,6 +29,7 @@ function ProfilePage(props) {
 
   const { editProfile, getUserProfile, getGigs } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
+  const { contract, registerFreelancer } = useContext(ContractContext);
 
   const [profileDetails, setProfileDetails] = useState({});
   const [name, setName] = useState(profileDetails.name || "");
@@ -234,7 +236,13 @@ function ProfilePage(props) {
         </Text>
       </Heading>
       <Box p={"5"} mx={"auto"}>
-        <Button>Be a Deelancer</Button>
+        <Button
+          onClick={() => {
+            contract && registerFreelancer();
+          }}
+        >
+          Be a Deelancer
+        </Button>
         <Heading
           lineHeight={1.1}
           fontWeight={600}
