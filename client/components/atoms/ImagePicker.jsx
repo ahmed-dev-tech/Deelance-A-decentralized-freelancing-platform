@@ -6,9 +6,9 @@ function ImagePicker({ inputFile, image }) {
   return (
     <Box
       position={"relative"}
-      height={"sm"}
+      height={"xs"}
       boxShadow={"2xl"}
-      width={"sm"}
+      width={"xs"}
       borderRadius={"full"}
       overflow={"hidden"}
     >

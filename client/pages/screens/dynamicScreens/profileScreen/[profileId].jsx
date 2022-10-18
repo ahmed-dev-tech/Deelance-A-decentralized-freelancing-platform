@@ -5,10 +5,13 @@ import { FirebaseContext } from "../../../../context/FirebaseProvider";
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
+  HStack,
   Input,
+  Stack,
   Text,
   Textarea,
 } from "@chakra-ui/react";
@@ -17,12 +20,13 @@ import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
 import Navbar from "../../../../components/molecules/Navbar";
 import ImagePicker from "../../../../components/atoms/imagePicker";
 import Rating from "../../../../components/atoms/Rating";
+import GigCard from "../../../../components/atoms/GigCard";
 
 function ProfilePage(props) {
   const router = useRouter();
   const { profileId } = router.query;
 
-  const { editProfile, getUserProfile } = useContext(FirebaseContext);
+  const { editProfile, getUserProfile, getGigs } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
 
   const [profileDetails, setProfileDetails] = useState({});
@@ -31,6 +35,7 @@ function ProfilePage(props) {
   const [pic, setPic] = useState({});
   const [isAltered, setIsAltered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [gigs, setGigs] = useState([]);
 
   const inputFile = useRef(null);
 
@@ -70,7 +75,11 @@ function ProfilePage(props) {
     }
   };
   useEffect(() => {
-    profileId && prepareUserProfile();
+    profileId &&
+      prepareUserProfile() &&
+      getGigs("rating", 5, ["address", "==", profileId]).then((res) => {
+        setGigs(res);
+      });
   }, [profileId]);
   console.log(profileDetails);
   return (
@@ -130,6 +139,7 @@ function ProfilePage(props) {
             style={{ display: "none" }}
           />
         </FormControl>
+
         <Button
           colorScheme="blue"
           mr={3}
@@ -166,7 +176,7 @@ function ProfilePage(props) {
         </Text>
       </Heading>
 
-      <Box width={"lg"} p={"5"} mx={"auto"}>
+      <Box p={"5"} mx={"auto"}>
         <Heading
           lineHeight={1.1}
           fontWeight={600}
@@ -184,6 +194,22 @@ function ProfilePage(props) {
               : 0
           }
         />
+      </Box>
+      <Box p={"5"} mx={"auto"}>
+        <Heading
+          lineHeight={1.1}
+          fontWeight={600}
+          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+        >
+          <Text as={"span"} color={"blue.400"}>
+            Gigs
+          </Text>
+        </Heading>
+        <HStack overflowX={"scroll"} spacing={4}>
+          {gigs.map((_, i) => {
+            return <GigCard content={_} key={i} />;
+          })}
+        </HStack>
       </Box>
       <Heading
         lineHeight={1.1}
@@ -207,7 +233,8 @@ function ProfilePage(props) {
           Seller Info
         </Text>
       </Heading>
-      <Box width={"lg"} p={"5"} mx={"auto"}>
+      <Box p={"5"} mx={"auto"}>
+        <Button>Be a Deelancer</Button>
         <Heading
           lineHeight={1.1}
           fontWeight={600}
@@ -225,6 +252,22 @@ function ProfilePage(props) {
               : 0
           }
         />
+      </Box>
+      <Box p={"5"} mx={"auto"}>
+        <Heading
+          lineHeight={1.1}
+          fontWeight={600}
+          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+        >
+          <Text as={"span"} color={"blue.400"}>
+            Orders
+          </Text>
+        </Heading>
+        <HStack overflowX={"scroll"} spacing={4}>
+          {gigs.map((_, i) => {
+            return <GigCard content={_} key={i} />;
+          })}
+        </HStack>
       </Box>
     </Box>
   );

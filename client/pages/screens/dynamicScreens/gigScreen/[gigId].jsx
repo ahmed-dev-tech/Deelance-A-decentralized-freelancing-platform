@@ -105,10 +105,20 @@ function GigPage(req, res) {
             </Box>
           </Flex>
         </Stack>
-        <Box rounded={"xl"} boxShadow={"xl"}>
-          <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
+        <Box
+          rounded={"2xl"}
+          boxShadow={"2xl"}
+          overflow={"hidden"}
+          bgColor={"gray.100"}
+          pos="fixed"
+          bottom="10"
+          right="10"
+          p={"2"}
+          width={"fit-content"}
+        >
+          <Stack direction={"row"} spacing={4} align={"center"}>
             <Avatar src={sellerInfo.image} alt={"Author"} />
-            <Stack direction={"row"} spacing={0} fontSize={"sm"}>
+            <Stack direction={"row"} spacing={3} fontSize={"sm"}>
               <Stack direction={"column"} spacing={0} fontSize={"sm"}>
                 <Text fontWeight={600}>{sellerInfo.name}</Text>
                 <Text color={"gray.500"}>
@@ -119,7 +129,7 @@ function GigPage(req, res) {
                 <Button
                   colorScheme={"teal"}
                   rounded={"full"}
-                  size={"lg"}
+                  size={"md"}
                   fontWeight={"normal"}
                   px={6}
                 >
@@ -130,7 +140,7 @@ function GigPage(req, res) {
                 <Button
                   colorScheme={"blue"}
                   rounded={"full"}
-                  size={"lg"}
+                  size={"md"}
                   fontWeight={"normal"}
                   px={6}
                 >
