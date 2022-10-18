@@ -7,7 +7,7 @@ function ImagePicker({ inputFile, image }) {
     <Box
       position={"relative"}
       height={"xs"}
-      boxShadow={"2xl"}
+      boxShadow={"xs"}
       width={"xs"}
       borderRadius={"full"}
       overflow={"hidden"}
@@ -19,21 +19,30 @@ function ImagePicker({ inputFile, image }) {
         aria-label={"Play Button"}
         variant={"ghost"}
         _hover={{ bg: "transparent" }}
-        icon={<Icon as={AiFillCamera} w={12} h={12} />}
+        icon={
+          <Icon as={AiFillCamera} style={{ color: "gray" }} w={12} h={12} />
+        }
         size={"lg"}
-        color={"white"}
+        color={"gray"}
         position={"absolute"}
         left={"50%"}
         top={"50%"}
+        zIndex={"overlay"}
         transform={"translateX(-50%) translateY(-50%)"}
       />
       <Image
         alt={"Hero Image"}
         fit={"cover"}
+        position={"absolute"}
+        left={0}
+        right={0}
+        top={0}
+        bottom={0}
+        margin={"auto"}
         borderRadius={"full"}
         align={"center"}
-        // w={"100%"}
-        // h={"100%"}
+        w={"100%"}
+        h={"100%"}
         src={image}
       />
     </Box>

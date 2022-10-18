@@ -11,21 +11,55 @@ import {
   Button,
   Image,
   Avatar,
+  FormControl,
+  Input,
+  Textarea,
 } from "@chakra-ui/react";
 import Navbar from "../../../../components/molecules/Navbar";
 import { FirebaseContext } from "../../../../context/FirebaseProvider";
 import axios from "axios";
 import { UtilitiesContext } from "../../../../context/UtilitiesProvider";
+import { ContractContext } from "../../../../context/ContractProvider";
+import ImagePicker from "../../../../components/atoms/imagePicker";
+import { useRef } from "react";
+import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
 
 function GigPage(req, res) {
   const router = useRouter();
   const { gigId } = router.query;
 
-  const { fetchGigDetails, getUserProfile } = useContext(FirebaseContext);
+  const { fetchGigDetails, getUserProfile, updateGig } =
+    useContext(FirebaseContext);
+  const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
+  const { address } = useContext(ContractContext);
+
   const [gigDetails, setGigDetails] = useState({});
   const [sellerInfo, setSellerInfo] = useState({});
+  const [gigName, setGigName] = useState("");
+  const [gigDescription, setGigDescription] = useState("");
+  const [gigPic, setGigPic] = useState({});
+  const [isAltered, setIsAltered] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
+  const inputFile = useRef(null);
+
+  const fetchFile = (e) => {
+    e.preventDefault();
+    setGigPic(e.target.files[0]);
+    setIsAltered(true);
+  };
+  const saveGig = async () => {
+    try {
+      setIsSaving(true);
+      const res = await deployToNFTStorage(gigName, gigDescription, gigPic);
+      await updateGig(gigId, { ipfsHash: res.ipnft });
+    } catch (error) {
+      throw error;
+    }
+    setIsSaving(false);
+    setIsAltered(false);
+  };
   const fetchSellerInfo = async (address) => {
     const res = await getUserProfile(address);
     let ipfsRes = await axios.get(
@@ -68,16 +102,43 @@ function GigPage(req, res) {
           direction={{ base: "column", md: "row" }}
         >
           <Stack flex={1} spacing={{ base: 5, md: 10 }}>
-            <Heading
-              lineHeight={1.1}
-              fontWeight={600}
-              fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-            >
-              <Text as={"span"} color={"blue.400"}>
-                {gigDetails.name}
-              </Text>
-            </Heading>
-            <Text color={"gray.500"}>{gigDetails.description}</Text>
+            {gigDetails.address == address ? (
+              <>
+                <FormControl>
+                  <Input
+                    value={gigName}
+                    onChange={(e) => {
+                      setIsAltered(true);
+                      setGigName(e.target.value);
+                    }}
+                    placeholder={gigName}
+                  />
+                </FormControl>
+                <FormControl>
+                  <Textarea
+                    value={gigDescription}
+                    onChange={(e) => {
+                      setIsAltered(true);
+                      setGigDescription(e.target.value);
+                    }}
+                    placeholder={gigDescription}
+                  />
+                </FormControl>
+              </>
+            ) : (
+              <>
+                <Heading
+                  lineHeight={1.1}
+                  fontWeight={600}
+                  fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+                >
+                  <Text as={"span"} color={"blue.400"}>
+                    {gigDetails.name}
+                  </Text>
+                </Heading>
+                <Text color={"gray.500"}>{gigDetails.description}</Text>
+              </>
+            )}
           </Stack>
           <Flex
             flex={1}
@@ -86,70 +147,97 @@ function GigPage(req, res) {
             position={"relative"}
             w={"full"}
           >
-            <Box
-              position={"relative"}
-              height={"300px"}
-              rounded={"2xl"}
-              boxShadow={"2xl"}
-              width={"full"}
-              overflow={"hidden"}
-            >
-              <Image
-                alt={"Hero Image"}
-                fit={"contain"}
-                align={"center"}
-                w={"100%"}
-                h={"100%"}
-                src={gigDetails.image}
-              />
-            </Box>
+            {gigDetails.address == address ? (
+              <Box width={"lg"}>
+                <FormControl isRequired>
+                  <Input
+                    onChange={(e) => fetchFile(e)}
+                    ref={inputFile}
+                    type={"file"}
+                    style={{ display: "none" }}
+                  />
+                </FormControl>
+                <ImagePicker inputFile={inputFile} image={gigDetails.image} />
+              </Box>
+            ) : (
+              <Box
+                position={"relative"}
+                height={"300px"}
+                rounded={"2xl"}
+                boxShadow={"2xl"}
+                width={"full"}
+                overflow={"hidden"}
+              >
+                <Image
+                  alt={"Hero Image"}
+                  fit={"contain"}
+                  align={"center"}
+                  w={"100%"}
+                  h={"100%"}
+                  src={gigDetails.image}
+                />
+              </Box>
+            )}
           </Flex>
         </Stack>
-        <Box
-          rounded={"2xl"}
-          boxShadow={"2xl"}
-          overflow={"hidden"}
-          bgColor={"gray.100"}
-          pos="fixed"
-          bottom="10"
-          right="10"
-          p={"2"}
-          width={"fit-content"}
-        >
-          <Stack direction={"row"} spacing={4} align={"center"}>
-            <Avatar src={sellerInfo.image} alt={"Author"} />
-            <Stack direction={"row"} spacing={3} fontSize={"sm"}>
-              <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-                <Text fontWeight={600}>{sellerInfo.name}</Text>
-                <Text color={"gray.500"}>
-                  {sellerInfo.bio && shortenText(sellerInfo.bio, 25)}
-                </Text>
+        {gigDetails.address == address ? (
+          <Button
+            isDisabled={!isAltered}
+            isLoading={isSaving}
+            onClick={saveGig}
+            pos="fixed"
+            bottom="10"
+            right="10"
+          >
+            Save
+          </Button>
+        ) : (
+          <Box
+            rounded={"2xl"}
+            boxShadow={"2xl"}
+            overflow={"hidden"}
+            bgColor={"gray.100"}
+            pos="fixed"
+            bottom="10"
+            right="10"
+            p={"2"}
+            width={"fit-content"}
+          >
+            <Stack direction={"row"} spacing={4} align={"center"}>
+              <Avatar src={sellerInfo.image} alt={"Author"} />
+              <Stack direction={"row"} spacing={3} fontSize={"sm"}>
+                <Stack direction={"column"} spacing={0} fontSize={"sm"}>
+                  <Text fontWeight={600}>{sellerInfo.name}</Text>
+                  <Text color={"gray.500"}>
+                    {sellerInfo.bio && shortenText(sellerInfo.bio, 25)}
+                  </Text>
+                </Stack>
+                <Link href={"/screens/App"}>
+                  <Button
+                    colorScheme={"teal"}
+                    rounded={"full"}
+                    size={"md"}
+                    fontWeight={"normal"}
+                    px={6}
+                  >
+                    Contact Seller
+                  </Button>
+                </Link>
+                <Link href={"/screens/App"}>
+                  <Button
+                    colorScheme={"blue"}
+                    rounded={"full"}
+                    size={"md"}
+                    fontWeight={"normal"}
+                    px={6}
+                  >
+                    Order Seller
+                  </Button>
+                </Link>
               </Stack>
-              <Link href={"/screens/App"}>
-                <Button
-                  colorScheme={"teal"}
-                  rounded={"full"}
-                  size={"md"}
-                  fontWeight={"normal"}
-                  px={6}
-                >
-                  Contact Seller
-                </Button>
-              </Link>
-              <Link href={"/screens/App"}>
-                <Button
-                  colorScheme={"blue"}
-                  rounded={"full"}
-                  size={"md"}
-                  fontWeight={"normal"}
-                  px={6}
-                >
-                  Order Seller
-                </Button>
-              </Link>
             </Stack>
-          </Stack>
-        </Box>
+          </Box>
+        )}
       </Container>
     </>
   );

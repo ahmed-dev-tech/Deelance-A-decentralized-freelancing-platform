@@ -29,7 +29,8 @@ function ProfilePage(props) {
 
   const { editProfile, getUserProfile, getGigs } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
-  const { contract, registerFreelancer } = useContext(ContractContext);
+  const { contract, registerFreelancer, registerClient, userDetailsOnChain } =
+    useContext(ContractContext);
 
   const [profileDetails, setProfileDetails] = useState({});
   const [name, setName] = useState(profileDetails.name || "");
@@ -38,7 +39,6 @@ function ProfilePage(props) {
   const [isAltered, setIsAltered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [gigs, setGigs] = useState([]);
-
   const inputFile = useRef(null);
 
   const fetchFile = (e) => {
@@ -77,13 +77,14 @@ function ProfilePage(props) {
     }
   };
   useEffect(() => {
-    profileId &&
-      prepareUserProfile() &&
+    if (profileId) {
+      prepareUserProfile();
       getGigs("rating", 5, ["address", "==", profileId]).then((res) => {
         setGigs(res);
       });
-  }, [profileId]);
-  console.log(profileDetails);
+    }
+  }, [profileId, contract]);
+  console.log(userDetailsOnChain);
   return (
     <Box>
       <Navbar />
@@ -179,6 +180,15 @@ function ProfilePage(props) {
       </Heading>
 
       <Box p={"5"} mx={"auto"}>
+        {!userDetailsOnChain.isClient && (
+          <Button
+            onClick={() => {
+              contract && registerClient();
+            }}
+          >
+            Be a Client
+          </Button>
+        )}
         <Heading
           lineHeight={1.1}
           fontWeight={600}
@@ -204,14 +214,18 @@ function ProfilePage(props) {
           fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
         >
           <Text as={"span"} color={"blue.400"}>
-            Gigs
+            Orders
           </Text>
         </Heading>
-        <HStack overflowX={"scroll"} spacing={4}>
-          {gigs.map((_, i) => {
-            return <GigCard content={_} key={i} />;
-          })}
-        </HStack>
+        {gigs.length ? (
+          <HStack overflowX={"scroll"} spacing={4}>
+            {gigs.map((_, i) => {
+              return <GigCard content={_} key={i} />;
+            })}
+          </HStack>
+        ) : (
+          "You have no Orders"
+        )}
       </Box>
       <Heading
         lineHeight={1.1}
@@ -236,13 +250,16 @@ function ProfilePage(props) {
         </Text>
       </Heading>
       <Box p={"5"} mx={"auto"}>
-        <Button
-          onClick={() => {
-            contract && registerFreelancer();
-          }}
-        >
-          Be a Deelancer
-        </Button>
+        {!userDetailsOnChain.isFreelancer && (
+          <Button
+            onClick={() => {
+              contract && registerFreelancer();
+            }}
+          >
+            Be a Deelancer
+          </Button>
+        )}
+
         <Heading
           lineHeight={1.1}
           fontWeight={600}
@@ -268,14 +285,18 @@ function ProfilePage(props) {
           fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
         >
           <Text as={"span"} color={"blue.400"}>
-            Orders
+            Gigs
           </Text>
         </Heading>
-        <HStack overflowX={"scroll"} spacing={4}>
-          {gigs.map((_, i) => {
-            return <GigCard content={_} key={i} />;
-          })}
-        </HStack>
+        {gigs.length ? (
+          <HStack overflowX={"scroll"} spacing={4}>
+            {gigs.map((_, i) => {
+              return <GigCard content={_} key={i} />;
+            })}
+          </HStack>
+        ) : (
+          "You have no gigs"
+        )}
       </Box>
     </Box>
   );

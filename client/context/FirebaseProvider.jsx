@@ -79,6 +79,18 @@ const createGig = async (
     throw error;
   }
 };
+const updateGig = async (gigId, dataObject) => {
+  try {
+    const docRef = doc(db, "gigs", gigId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const firebaseRes = await updateDoc(docRef, dataObject);
+      return firebaseRes;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 const getGigs = async (order = "rating", lim = 10, condition = null) => {
   try {
     let docRef;
@@ -204,6 +216,7 @@ function FirebaseProvider({ children }) {
     categories,
     createGig,
     getGigs,
+    updateGig,
     createOrder,
     getOrders,
     fetchGigDetails,

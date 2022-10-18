@@ -7,6 +7,7 @@ const NFT_STORAGE_KEY = process.env.NEXT_PUBLIC_NFT_STORAGE_KEY;
 
 const deployToNFTStorage = async (name, description, image) => {
   try {
+    console.log(name, description, image);
     const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
 
     // call client.store, passing in the image & metadata

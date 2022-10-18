@@ -12,6 +12,7 @@ function ContractProvider({ children }) {
   const web3ModalRef = useRef();
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
+  const [userDetailsOnChain, setUserDetailsOnChain] = useState([]);
 
   let myProvider;
 
@@ -55,9 +56,25 @@ function ContractProvider({ children }) {
   // Contract Interaction Functions
   const registerFreelancer = async () => {
     try {
-      await contract.registerFreelancer({ gasPrice: 100000000000 });
+      await contract.registerFreelancer({ gasPrice: 1000000000000 });
     } catch (error) {
       console.log(error);
+    }
+  };
+  const registerClient = async () => {
+    try {
+      await contract.registerClient({ gasPrice: 1000000000000 });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const _getUserDetailsOnChain = async (address) => {
+    try {
+      const info = await contract.users(address);
+      return info;
+    } catch (error) {
+      console.log(error);
+      return [];
     }
   };
   useEffect(() => {
@@ -71,10 +88,18 @@ function ContractProvider({ children }) {
       getAccounts().then((res) => setAddress(res));
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    address &&
+      _getUserDetailsOnChain(address).then((res) => setUserDetailsOnChain(res));
+  }, [address]);
+
   const data = {
     contract,
     address,
     registerFreelancer,
+    registerClient,
+    userDetailsOnChain,
   };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>
