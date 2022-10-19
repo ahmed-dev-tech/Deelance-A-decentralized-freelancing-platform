@@ -207,6 +207,32 @@ const getUserProfile = async (address) => {
     throw error;
   }
 };
+const fetchOrderDetails = async (orderId) => {
+  try {
+    console.log("orderId:", orderId);
+    const docRef = doc(db, "orders", orderId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return {};
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+const updateOrder = async (orderId, dataObject) => {
+  try {
+    const docRef = doc(db, "orders", orderId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const firebaseRes = await updateDoc(docRef, dataObject);
+      return firebaseRes;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 function FirebaseProvider({ children }) {
   const [categories, setCategories] = useState([]);
   const data = {
@@ -222,6 +248,8 @@ function FirebaseProvider({ children }) {
     fetchGigDetails,
     editProfile,
     getUserProfile,
+    fetchOrderDetails,
+    updateOrder,
   };
 
   useEffect(() => {

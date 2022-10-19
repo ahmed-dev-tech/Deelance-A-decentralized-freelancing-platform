@@ -7,10 +7,9 @@ function UtilitiesProvider({ children }) {
   const [isFreelancer, setIsFreelancer] = useState(false);
   const mumbaiTokens = [
     { value: "native", label: "MATIC" },
-    { value: 0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa, label: "DAI" },
-    { value: 0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa, label: "USDC" },
-    { value: 0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa, label: "USDT" },
-    { value: 0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa, label: "DAI" },
+    { value: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063", label: "DAI" },
+    { value: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", label: "USDC" },
+    { value: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", label: "USDT" },
   ];
   const shortenAddress = (address) => {
     return `${address.slice(0, 5)}...${address.slice(38, 42)}`;
@@ -20,7 +19,13 @@ function UtilitiesProvider({ children }) {
       ? text
       : `${text.slice(0, characters - 3)}...`;
   };
-  const data = { shortenAddress, shortenText, isFreelancer, setIsFreelancer };
+  const data = {
+    shortenAddress,
+    shortenText,
+    isFreelancer,
+    setIsFreelancer,
+    mumbaiTokens,
+  };
   return (
     <UtilitiesContext.Provider value={data}>
       {children}

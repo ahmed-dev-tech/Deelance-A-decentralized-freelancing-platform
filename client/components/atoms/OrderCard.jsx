@@ -25,12 +25,14 @@ function OrderCard({ content }) {
   const { shortenAddress, shortenText } = useContext(UtilitiesContext);
 
   const [orderName, setOrderName] = useState("");
+  const [orderDescription, setOrderDescription] = useState("");
   const [orderImage, setOrderImage] = useState("");
   const fetchMetaData = async () => {
     let res = await axios.get(
       `https://${content.ipfsHash}.ipfs.ipfs-gateway.cloud/metadata.json`
     );
     setOrderName(res.data.name);
+    setOrderDescription(res.data.description);
     const [cid, fileName] = res.data.image.slice(7).split("/");
     console.log(cid, fileName);
     setOrderImage(`https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`);
@@ -77,10 +79,7 @@ function OrderCard({ content }) {
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
-              <AccordionPanel pb={4}>
-                Click on the Connect Wallet button in the navbar to connect your
-                ethereum wallet to the polygon blockchain.
-              </AccordionPanel>
+              <AccordionPanel pb={4}>{orderDescription}</AccordionPanel>
             </AccordionItem>
           </Accordion>
         </Box>

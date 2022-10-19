@@ -24,7 +24,7 @@ import ImagePicker from "../../../../components/atoms/imagePicker";
 import { useRef } from "react";
 import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
 
-function GigPage(req, res) {
+function GigPage() {
   const router = useRouter();
   const { gigId } = router.query;
 

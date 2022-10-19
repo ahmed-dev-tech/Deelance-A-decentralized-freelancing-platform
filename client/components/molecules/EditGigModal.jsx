@@ -18,18 +18,21 @@ import { useContext, useState } from "react";
 import { ContractContext } from "../../context/ContractProvider";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import { NFTStorageContext } from "../../context/NFTStorageProvider";
+import { UtilitiesContext } from "../../context/UtilitiesProvider";
 
 function EditGigModal({ children, isOpen, onClose }) {
   // Context values
   const { categories, createGig } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { address } = useContext(ContractContext);
+  const { mumbaiTokens } = useContext(UtilitiesContext);
   // Form values
   const [gigOffer, setGigOffer] = useState("");
   const [gigDescription, setGigDescription] = useState("");
   const [gigFile, setGigFile] = useState({});
   const [gigCID, setGigCID] = useState("");
   const [gigCategory, setGigCategory] = useState("");
+  const [gigPrice, setGigPrice] = useState({ value: 0, token: "native" });
   // Button isLoading values
   const [isDeployingNFT, setIsDeployingNFT] = useState(false);
   const [isSavingGig, setIsSavingGig] = useState(false);
@@ -95,45 +98,45 @@ function EditGigModal({ children, isOpen, onClose }) {
             >
               Deploy to NFTStorage
             </Button>
-            <Select
-              onChange={(e) => {
-                setGigCategory(e.value);
-              }}
-              className="basic-single"
-              classNamePrefix="select"
-              defaultValue={
-                categories.map((_) => {
+            <FormControl isRequired>
+              <FormLabel>Select Category</FormLabel>
+              <Select
+                onChange={(e) => {
+                  setGigCategory(e.value);
+                }}
+                className="basic-single"
+                classNamePrefix="select"
+                defaultValue={
+                  categories.map((_) => {
+                    return { value: _, label: _.toUpperCase() };
+                  })[0]
+                }
+                isClearable={true}
+                isSearchable={true}
+                name="category"
+                options={categories.map((_) => {
                   return { value: _, label: _.toUpperCase() };
-                })[0]
-              }
-              isClearable={true}
-              isSearchable={true}
-              name="category"
-              options={categories.map((_) => {
-                return { value: _, label: _.toUpperCase() };
-              })}
-            />
+                })}
+              />
+            </FormControl>
             <FormControl isRequired>
               <FormLabel>What's your fee charge?</FormLabel>
-              <Flex justifyContent="space-between" alignContent="center">
-                <Input type={"number"} width={"xs"} />
+              <Flex justifyContent="left" alignContent="center">
+                <Input
+                  type={"number"}
+                  width={"xs"}
+                  mr={"3"}
+                  onChange={setGigPrice({ ...gigPrice, value: e.value })}
+                />
                 <Select
-                  onChange={(e) => {
-                    console.log(e);
-                  }}
+                  onChange={setGigPrice({ ...gigPrice, token: e.value })}
                   className="basic-single"
                   classNamePrefix="select"
-                  defaultValue={
-                    categories.map((_) => {
-                      return { value: _, label: _.toUpperCase() };
-                    })[0]
-                  }
+                  defaultValue={mumbaiTokens[0]}
                   isClearable={true}
                   isSearchable={true}
                   name="category"
-                  options={categories.map((_) => {
-                    return { value: _, label: _.toUpperCase() };
-                  })}
+                  options={mumbaiTokens}
                 />
               </Flex>
             </FormControl>
