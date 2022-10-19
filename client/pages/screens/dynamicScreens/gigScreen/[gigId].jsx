@@ -14,6 +14,7 @@ import {
   FormControl,
   Input,
   Textarea,
+  HStack,
 } from "@chakra-ui/react";
 import Navbar from "../../../../components/molecules/Navbar";
 import { FirebaseContext } from "../../../../context/FirebaseProvider";
@@ -28,7 +29,7 @@ function GigPage() {
   const router = useRouter();
   const { gigId } = router.query;
 
-  const { fetchGigDetails, getUserProfile, updateGig } =
+  const { fetchGigDetails, getUserProfile, updateGig, deleteGig } =
     useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
@@ -41,6 +42,7 @@ function GigPage() {
   const [gigPic, setGigPic] = useState({});
   const [isAltered, setIsAltered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const inputFile = useRef(null);
 
@@ -63,6 +65,11 @@ function GigPage() {
     }
     setIsSaving(false);
     setIsAltered(false);
+  };
+  const removeGig = async () => {
+    setIsDeleting(true);
+    await deleteGig(gigId);
+    setIsDeleting(false);
   };
   const fetchSellerInfo = async (address) => {
     const res = await getUserProfile(address);
@@ -185,16 +192,18 @@ function GigPage() {
           </Flex>
         </Stack>
         {gigDetails.address == address ? (
-          <Button
-            isDisabled={!isAltered}
-            isLoading={isSaving}
-            onClick={saveGig}
-            pos="fixed"
-            bottom="10"
-            right="10"
-          >
-            Save
-          </Button>
+          <HStack pos="fixed" bottom="10" right="10">
+            <Button
+              isDisabled={!isAltered}
+              isLoading={isSaving}
+              onClick={saveGig}
+            >
+              Save
+            </Button>
+            <Button isLoading={isDeleting} onClick={removeGig}>
+              Delete
+            </Button>
+          </HStack>
         ) : (
           <Box
             rounded={"2xl"}

@@ -126,10 +126,12 @@ function EditGigModal({ children, isOpen, onClose }) {
                   type={"number"}
                   width={"xs"}
                   mr={"3"}
-                  onChange={setGigPrice({ ...gigPrice, value: e.value })}
+                  onChange={(e) =>
+                    setGigPrice({ ...gigPrice, value: e.target.value })
+                  }
                 />
                 <Select
-                  onChange={setGigPrice({ ...gigPrice, token: e.value })}
+                  onChange={(e) => setGigPrice({ ...gigPrice, token: e.value })}
                   className="basic-single"
                   classNamePrefix="select"
                   defaultValue={mumbaiTokens[0]}

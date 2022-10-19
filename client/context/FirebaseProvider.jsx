@@ -13,6 +13,7 @@ import {
   doc,
   setDoc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -233,6 +234,24 @@ const updateOrder = async (orderId, dataObject) => {
     throw error;
   }
 };
+const deleteGig = async (gigId) => {
+  try {
+    const docRef = doc(db, "gigs", gigId);
+    const res = await deleteDoc(docRef);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+const deleteOrder = async (orderId) => {
+  try {
+    const docRef = doc(db, "orders", orderId);
+    const res = await deleteDoc(docRef);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
 function FirebaseProvider({ children }) {
   const [categories, setCategories] = useState([]);
   const data = {
@@ -250,6 +269,8 @@ function FirebaseProvider({ children }) {
     getUserProfile,
     fetchOrderDetails,
     updateOrder,
+    deleteGig,
+    deleteOrder,
   };
 
   useEffect(() => {

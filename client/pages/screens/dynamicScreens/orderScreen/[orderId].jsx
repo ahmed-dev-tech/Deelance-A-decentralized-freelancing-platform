@@ -14,6 +14,7 @@ import {
   FormControl,
   Input,
   Textarea,
+  HStack,
 } from "@chakra-ui/react";
 import Navbar from "../../../../components/molecules/Navbar";
 import { FirebaseContext } from "../../../../context/FirebaseProvider";
@@ -28,7 +29,7 @@ function OrderPage() {
   const router = useRouter();
   const { orderId } = router.query;
 
-  const { fetchOrderDetails, getUserProfile, updateOrder } =
+  const { fetchOrderDetails, getUserProfile, updateOrder, deleteOrder } =
     useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
@@ -39,9 +40,10 @@ function OrderPage() {
   const [orderName, setOrderName] = useState("");
   const [orderDescription, setOrderDescription] = useState("");
   const [orderPic, setOrderPic] = useState({});
+  const [price, setPrice] = useState(0);
   const [isAltered, setIsAltered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
+  const [isDeleting, setIsDeleting] = useState(false);
   const inputFile = useRef(null);
 
   const fetchFile = (e) => {
@@ -63,6 +65,11 @@ function OrderPage() {
     }
     setIsSaving(false);
     setIsAltered(false);
+  };
+  const removeOrder = async () => {
+    setIsDeleting(true);
+    await deleteOrder(orderId);
+    setIsDeleting(false);
   };
   const fetchClientInfo = async (address) => {
     const res = await getUserProfile(address);
@@ -185,16 +192,18 @@ function OrderPage() {
           </Flex>
         </Stack>
         {orderDetails.address == address ? (
-          <Button
-            isDisabled={!isAltered}
-            isLoading={isSaving}
-            onClick={saveOrder}
-            pos="fixed"
-            bottom="10"
-            right="10"
-          >
-            Save
-          </Button>
+          <HStack pos="fixed" bottom="10" right="10">
+            <Button
+              isDisabled={!isAltered}
+              isLoading={isSaving}
+              onClick={saveOrder}
+            >
+              Save
+            </Button>
+            <Button isLoading={isDeleting} onClick={removeOrder}>
+              Delete
+            </Button>
+          </HStack>
         ) : (
           <Box
             rounded={"2xl"}
