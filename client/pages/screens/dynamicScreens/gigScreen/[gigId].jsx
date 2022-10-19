@@ -52,7 +52,11 @@ function GigPage(req, res) {
   const saveGig = async () => {
     try {
       setIsSaving(true);
-      const res = await deployToNFTStorage(gigName, gigDescription, gigPic);
+      const res = await deployToNFTStorage(
+        gigName || gigDetails.name,
+        gigDescription || gigDetails.description,
+        gigPic
+      );
       await updateGig(gigId, { ipfsHash: res.ipnft });
     } catch (error) {
       throw error;
@@ -111,7 +115,7 @@ function GigPage(req, res) {
                       setIsAltered(true);
                       setGigName(e.target.value);
                     }}
-                    placeholder={gigName}
+                    placeholder={gigDetails.name}
                   />
                 </FormControl>
                 <FormControl>
@@ -121,7 +125,7 @@ function GigPage(req, res) {
                       setIsAltered(true);
                       setGigDescription(e.target.value);
                     }}
-                    placeholder={gigDescription}
+                    placeholder={gigDetails.description}
                   />
                 </FormControl>
               </>

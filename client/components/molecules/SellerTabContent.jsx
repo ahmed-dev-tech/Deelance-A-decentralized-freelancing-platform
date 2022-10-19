@@ -20,15 +20,11 @@ const SellerTabContent = (props) => {
     <Box p={5}>
       <Heading fontSize="2xl">Sub category</Heading>
       <Box py={5}>
-        <HStack
-          style={{ scrollbarWidth: "none" }}
-          spacing={8}
-          overflowX="scroll"
-        >
+        <Stack spacing={8}>
           {orders.map((_, i) => {
             return <OrderCard content={_} key={i} />;
           })}
-        </HStack>
+        </Stack>
       </Box>
     </Box>
   );
