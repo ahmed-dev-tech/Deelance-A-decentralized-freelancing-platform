@@ -4,12 +4,16 @@ import Web3Modal from "web3modal";
 import deelance from "../abi/Deelance-address.json";
 import deelanceABI from "../abi/Deelance.json";
 import { useMoralis } from "react-moralis";
+import { useContext } from "react";
+import { UtilitiesContext } from "./UtilitiesProvider";
 
 export const ContractContext = createContext();
 
 function ContractProvider({ children }) {
   const { authenticate, isAuthenticated, isWeb3Enabled } = useMoralis();
   const web3ModalRef = useRef();
+
+  const { makeToast } = useContext(UtilitiesContext);
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
   const [userDetailsOnChain, setUserDetailsOnChain] = useState([]);
@@ -50,37 +54,74 @@ function ContractProvider({ children }) {
   };
   const handleAccountChange = (accounts) => {
     setAddress(accounts[0]);
+    makeToast(
+      "Metamask success",
+      `Account has successfully been changed to ${accounts[0]}`,
+      "success"
+    );
   };
 
   // Contract Interaction Functions
   const registerFreelancer = async () => {
     try {
       await contract.registerFreelancer({ gasPrice: 1000000000000 });
+      makeToast(
+        "Contract Success",
+        "Successfully registered Freelancer on chain",
+        "success"
+      );
     } catch (error) {
-      console.log(error);
+      makeToast(
+        "Contract Error",
+        "An Unknown error occurred while registering this address as a freelancer",
+        "error"
+      );
     }
   };
   const registerClient = async () => {
     try {
       await contract.registerClient({ gasPrice: 1000000000000 });
+      makeToast(
+        "Contract Success",
+        "Successfully registered Client on chain",
+        "success"
+      );
     } catch (error) {
-      console.log(error);
+      makeToast(
+        "Contract Error",
+        "An Unknown error occurred while registering this address as a client",
+        "error"
+      );
     }
   };
   const _getUserDetailsOnChain = async (address) => {
     try {
       const info = await contract.users(address, { gasLimit: 50000 });
+      makeToast(
+        "Contract Success",
+        "Successfully retrieved user details",
+        "success"
+      );
       return info;
     } catch (error) {
-      console.log(error);
+      makeToast(
+        "Contract Error",
+        "An Unknown error occurred while retrieving user details",
+        "error"
+      );
       return [];
     }
   };
   const startProject = async (address) => {
     try {
       await contract.startProject(address);
+      makeToast("Contract Success", "Successfully started project", "success");
     } catch (error) {
-      console.log(error);
+      makeToast(
+        "Contract Error",
+        "An Unknown error occurred while starting project with freelancer provided",
+        "error"
+      );
     }
   };
   useEffect(() => {

@@ -1,9 +1,10 @@
+import { useToast } from "@chakra-ui/react";
 import React, { createContext, useState } from "react";
 
 export const UtilitiesContext = createContext();
 
 function UtilitiesProvider({ children }) {
-  //TODO: isFreelancer global state
+  const toast = useToast();
   const [isFreelancer, setIsFreelancer] = useState(false);
   const mumbaiTokens = [
     { value: "native", label: "MATIC" },
@@ -19,12 +20,16 @@ function UtilitiesProvider({ children }) {
       ? text
       : `${text.slice(0, characters - 3)}...`;
   };
+  const makeToast = (title, description, status) => {
+    toast({ title, description, status, duration: 9000, isClosable: true });
+  };
   const data = {
     shortenAddress,
     shortenText,
     isFreelancer,
     setIsFreelancer,
     mumbaiTokens,
+    makeToast,
   };
   return (
     <UtilitiesContext.Provider value={data}>
