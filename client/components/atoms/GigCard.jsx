@@ -74,13 +74,13 @@ function GigCard({ content }) {
         <Flex justifyContent="space-between" alignContent="center">
           <Rating
             rating={content.rating}
-            numReviews={content.orderArray.length}
+            numReviews={content?.orderArray?.length}
           />
           <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
             <Box as="span" color={"gray.600"} fontSize="lg">
               ${/* content.price.token */}
             </Box>
-            {content.price.value}
+            {content?.price?.value}
           </Box>
         </Flex>
         <Flex justifyContent="space-between" alignContent="center">

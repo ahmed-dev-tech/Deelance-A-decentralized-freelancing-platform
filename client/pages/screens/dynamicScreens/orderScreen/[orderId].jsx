@@ -17,6 +17,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import Navbar from "../../../../components/molecules/Navbar";
+import Footer from "../../../../components/molecules/Footer";
 import { FirebaseContext } from "../../../../context/FirebaseProvider";
 import axios from "axios";
 import { UtilitiesContext } from "../../../../context/UtilitiesProvider";
@@ -29,11 +30,16 @@ function OrderPage() {
   const router = useRouter();
   const { orderId } = router.query;
 
-  const { fetchOrderDetails, getUserProfile, updateOrder, deleteOrder } =
-    useContext(FirebaseContext);
+  const {
+    fetchOrderDetails,
+    getUserProfile,
+    updateOrder,
+    deleteOrder,
+    addToBiddersArray,
+  } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
-  const { address } = useContext(ContractContext);
+  const { address, startProject } = useContext(ContractContext);
 
   const [orderDetails, setOrderDetails] = useState({});
   const [clientInfo, setClientInfo] = useState({});
@@ -71,6 +77,12 @@ function OrderPage() {
     await deleteOrder(orderId);
     setIsDeleting(false);
   };
+  const showInterest = async () => {
+    await addToBiddersArray(orderId, address);
+  };
+  const orderSeller = async (address) => {
+    await startProject(address);
+  };
   const fetchClientInfo = async (address) => {
     const res = await getUserProfile(address);
     let ipfsRes = await axios.get(
@@ -106,6 +118,28 @@ function OrderPage() {
     <>
       <Navbar />
       <Container maxW={"7xl"}>
+        <Heading
+          lineHeight={0.8}
+          fontWeight={500}
+          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+        >
+          <Text
+            as={"span"}
+            position={"relative"}
+            _after={{
+              content: "''",
+              width: "full",
+              height: "30%",
+              position: "absolute",
+              bottom: 1,
+              left: 0,
+              bg: "blue.400",
+              zIndex: -1,
+            }}
+          >
+            Edit Order
+          </Text>
+        </Heading>
         <Stack
           align={"center"}
           spacing={{ base: 8, md: 10 }}
@@ -191,6 +225,57 @@ function OrderPage() {
             )}
           </Flex>
         </Stack>
+        <Heading
+          lineHeight={0.8}
+          fontWeight={500}
+          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
+        >
+          <Text
+            as={"span"}
+            position={"relative"}
+            _after={{
+              content: "''",
+              width: "full",
+              height: "30%",
+              position: "absolute",
+              bottom: 1,
+              left: 0,
+              bg: "blue.400",
+              zIndex: -1,
+            }}
+          >
+            All Bidders
+          </Text>
+        </Heading>
+        <Stack p={3} maxW={"lg"}>
+          {orderDetails?.biddersArray?.map((_, i) => {
+            return address == orderDetails.address ? (
+              <Flex justifyContent={"space-between"}>
+                <Link
+                  href={`/screens/dynamicScreens/profileScreen/${_}`}
+                  key={i}
+                >
+                  <Button>{_}</Button>
+                </Link>
+                <Button
+                  onClick={() => {
+                    orderSeller(_);
+                  }}
+                >
+                  Order
+                </Button>
+              </Flex>
+            ) : _ == address ? (
+              <Link href={`/screens/dynamicScreens/profileScreen/${_}`} key={i}>
+                <Button>You</Button>
+              </Link>
+            ) : (
+              <Link href={`/screens/dynamicScreens/profileScreen/${_}`} key={i}>
+                <Button>{_}</Button>
+              </Link>
+            );
+          })}
+        </Stack>
         {orderDetails.address == address ? (
           <HStack pos="fixed" bottom="10" right="10">
             <Button
@@ -236,22 +321,23 @@ function OrderPage() {
                     Contact Client
                   </Button>
                 </Link>
-                <Link href={"/screens/App"}>
-                  <Button
-                    colorScheme={"blue"}
-                    rounded={"full"}
-                    size={"md"}
-                    fontWeight={"normal"}
-                    px={6}
-                  >
-                    Show Interest
-                  </Button>
-                </Link>
+
+                <Button
+                  colorScheme={"blue"}
+                  onClick={showInterest}
+                  rounded={"full"}
+                  size={"md"}
+                  fontWeight={"normal"}
+                  px={6}
+                >
+                  Show Interest
+                </Button>
               </Stack>
             </Stack>
           </Box>
         )}
       </Container>
+      <Footer />
     </>
   );
 }

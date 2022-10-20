@@ -14,6 +14,7 @@ import {
   setDoc,
   updateDoc,
   deleteDoc,
+  arrayUnion,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -256,6 +257,16 @@ const deleteOrder = async (orderId) => {
     throw error;
   }
 };
+const addToBiddersArray = async (orderId, address) => {
+  try {
+    const docRef = doc(db, "orders", orderId);
+    await updateDoc(docRef, {
+      biddersArray: arrayUnion(address),
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 function FirebaseProvider({ children }) {
   const [categories, setCategories] = useState([]);
   const data = {
@@ -275,6 +286,7 @@ function FirebaseProvider({ children }) {
     updateOrder,
     deleteGig,
     deleteOrder,
+    addToBiddersArray,
   };
 
   useEffect(() => {

@@ -69,11 +69,18 @@ function ContractProvider({ children }) {
   };
   const _getUserDetailsOnChain = async (address) => {
     try {
-      const info = await contract.users(address);
+      const info = await contract.users(address, { gasLimit: 50000 });
       return info;
     } catch (error) {
       console.log(error);
       return [];
+    }
+  };
+  const startProject = async (address) => {
+    try {
+      await contract.startProject(address);
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -106,6 +113,7 @@ function ContractProvider({ children }) {
     registerFreelancer,
     registerClient,
     userDetailsOnChain,
+    startProject,
   };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>

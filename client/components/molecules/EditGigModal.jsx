@@ -57,6 +57,8 @@ function EditGigModal({ children, isOpen, onClose }) {
     e.preventDefault();
     setIsSavingGig(true);
     try {
+      if (!(gigCID && gigCategory && address && gigPrice))
+        return "All parameters are required";
       await createGig(gigCID, gigCategory, address, gigPrice);
     } catch (error) {
       throw error;
