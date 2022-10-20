@@ -63,6 +63,7 @@ const createGig = async (
   ipfsHash,
   category,
   address,
+  price,
   rating = 0,
   orderArray = []
 ) => {
@@ -71,6 +72,7 @@ const createGig = async (
       ipfsHash,
       category,
       address,
+      price,
       rating,
       orderArray,
       timestamp: Date.now(),
@@ -120,6 +122,7 @@ const createOrder = async (
   ipfsHash,
   category,
   address,
+  budget,
   rating = 0,
   biddersArray = []
 ) => {
@@ -128,6 +131,7 @@ const createOrder = async (
       ipfsHash,
       category,
       address,
+      budget,
       rating,
       biddersArray,
       timestamp: Date.now(),

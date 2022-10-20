@@ -57,7 +57,7 @@ function EditGigModal({ children, isOpen, onClose }) {
     e.preventDefault();
     setIsSavingGig(true);
     try {
-      await createGig(gigCID, gigCategory, address);
+      await createGig(gigCID, gigCategory, address, gigPrice);
     } catch (error) {
       throw error;
     }

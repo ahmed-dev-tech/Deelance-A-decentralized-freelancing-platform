@@ -48,11 +48,10 @@ function ContractProvider({ children }) {
     let accounts = await myProvider.send("eth_requestAccounts", []);
     return accounts[0];
   };
+  const handleAccountChange = (accounts) => {
+    setAddress(accounts[0]);
+  };
 
-  myProvider &&
-    myProvider.on("accountsChanged", function (accounts) {
-      setAddress(accounts[0]);
-    });
   // Contract Interaction Functions
   const registerFreelancer = async () => {
     try {
@@ -93,7 +92,14 @@ function ContractProvider({ children }) {
     address &&
       _getUserDetailsOnChain(address).then((res) => setUserDetailsOnChain(res));
   }, [address]);
-
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", handleAccountChange);
+      return () => {
+        window.ethereum.removeListener("accountsChanged", handleAccountChange);
+      };
+    }
+  });
   const data = {
     contract,
     address,

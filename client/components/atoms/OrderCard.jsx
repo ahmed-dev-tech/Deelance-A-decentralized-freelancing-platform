@@ -74,7 +74,7 @@ function OrderCard({ content }) {
               <h2>
                 <AccordionButton>
                   <Box flex="1" textAlign="left">
-                    {shortenText(orderName, 40)}
+                    {shortenText(orderName, 100)}
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -85,12 +85,12 @@ function OrderCard({ content }) {
         </Box>
 
         <Flex justifyContent="space-between" alignContent="center">
-          <Text>0 bidders</Text>
+          <Text>{`${content.biddersArray.length} bidders`}</Text>
           <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
             <Box as="span" color={"gray.600"} fontSize="lg">
               $
             </Box>
-            {"price"}
+            {content.budget.value}
           </Box>
         </Flex>
         <Flex justifyContent="space-between" alignContent="center">
