@@ -25,6 +25,7 @@ import { ContractContext } from "../../../../context/ContractProvider";
 import ImagePicker from "../../../../components/atoms/imagePicker";
 import { useRef } from "react";
 import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
+import HeadingText from "../../../../components/atoms/HeadingText";
 
 function OrderPage() {
   const router = useRouter();
@@ -118,28 +119,8 @@ function OrderPage() {
     <>
       <Navbar />
       <Container maxW={"7xl"}>
-        <Heading
-          lineHeight={0.8}
-          fontWeight={500}
-          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-        >
-          <Text
-            as={"span"}
-            position={"relative"}
-            _after={{
-              content: "''",
-              width: "full",
-              height: "30%",
-              position: "absolute",
-              bottom: 1,
-              left: 0,
-              bg: "blue.400",
-              zIndex: -1,
-            }}
-          >
-            Edit Order
-          </Text>
-        </Heading>
+        <HeadingText>Edit Order</HeadingText>
+
         <Stack
           align={"center"}
           spacing={{ base: 8, md: 10 }}
@@ -225,28 +206,8 @@ function OrderPage() {
             )}
           </Flex>
         </Stack>
-        <Heading
-          lineHeight={0.8}
-          fontWeight={500}
-          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-        >
-          <Text
-            as={"span"}
-            position={"relative"}
-            _after={{
-              content: "''",
-              width: "full",
-              height: "30%",
-              position: "absolute",
-              bottom: 1,
-              left: 0,
-              bg: "blue.400",
-              zIndex: -1,
-            }}
-          >
-            All Bidders
-          </Text>
-        </Heading>
+        <HeadingText>All Bidders</HeadingText>
+
         <Stack p={3} maxW={"lg"}>
           {orderDetails?.biddersArray?.map((_, i) => {
             return address == orderDetails.address ? (

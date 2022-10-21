@@ -23,6 +23,7 @@ import ImagePicker from "../../../../components/atoms/imagePicker";
 import Rating from "../../../../components/atoms/Rating";
 import GigCard from "../../../../components/atoms/GigCard";
 import { ContractContext } from "../../../../context/ContractProvider";
+import HeadingText from "../../../../components/atoms/HeadingText";
 
 function ProfilePage(props) {
   const router = useRouter();
@@ -95,28 +96,10 @@ function ProfilePage(props) {
     <Box>
       <Navbar />
       <Box p={10}>
-        <Heading
-          lineHeight={1.1}
-          fontWeight={600}
-          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-        >
-          <Text
-            as={"span"}
-            position={"relative"}
-            _after={{
-              content: "''",
-              width: "full",
-              height: "30%",
-              position: "absolute",
-              bottom: 1,
-              left: 0,
-              bg: "blue.400",
-              zIndex: -1,
-            }}
-          >
-            {address == profileId ? "Edit Profile" : "Profile"}
-          </Text>
-        </Heading>
+        <HeadingText>
+          {address == profileId ? "Edit Profile" : "Profile"}
+        </HeadingText>
+
         {address == profileId ? (
           <Box width={"lg"} p={"5"} mx={"auto"}>
             <ImagePicker image={profileDetails.image} inputFile={inputFile} />
@@ -218,28 +201,7 @@ function ProfilePage(props) {
           </Button>
         )}
 
-        <Heading
-          lineHeight={1.1}
-          fontWeight={600}
-          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-        >
-          <Text
-            as={"span"}
-            position={"relative"}
-            _after={{
-              content: "''",
-              width: "full",
-              height: "30%",
-              position: "absolute",
-              bottom: 1,
-              left: 0,
-              bg: "blue.400",
-              zIndex: -1,
-            }}
-          >
-            Client Info
-          </Text>
-        </Heading>
+        <HeadingText>Client Info</HeadingText>
 
         <Box p={"5"} mx={"auto"}>
           {address == profileId && !userDetailsOnChain.isClient && (
@@ -289,28 +251,8 @@ function ProfilePage(props) {
             "You have no Orders"
           )}
         </Box>
-        <Heading
-          lineHeight={1.1}
-          fontWeight={600}
-          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-        >
-          <Text
-            as={"span"}
-            position={"relative"}
-            _after={{
-              content: "''",
-              width: "full",
-              height: "30%",
-              position: "absolute",
-              bottom: 1,
-              left: 0,
-              bg: "blue.400",
-              zIndex: -1,
-            }}
-          >
-            Seller Info
-          </Text>
-        </Heading>
+        <HeadingText>Seller Info</HeadingText>
+
         <Box p={"5"} mx={"auto"}>
           {address == profileId && !userDetailsOnChain.isFreelancer && (
             <Button
