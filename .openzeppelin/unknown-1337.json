@@ -56,13 +56,18 @@
       "kind": "transparent"
     },
     {
-      "address": "0xfCA7f990115e4Bd6134Db9D5A32885C9c362f677",
-      "txHash": "0x9178fe85203b52f53096ddb0c899a93547f4c4cc7d7755015e07bc262e30d075",
+      "address": "0x54e3a7AB81B3610C529002c24d5eAD542819407C",
+      "txHash": "0x6faf09f92e4fb325cf9b9a740d3f4961eaa09279075022daecaab781f3a3e3dd",
       "kind": "transparent"
     },
     {
-      "address": "0x54e3a7AB81B3610C529002c24d5eAD542819407C",
-      "txHash": "0x6faf09f92e4fb325cf9b9a740d3f4961eaa09279075022daecaab781f3a3e3dd",
+      "address": "0xfCA7f990115e4Bd6134Db9D5A32885C9c362f677",
+      "txHash": "0xb2b92de6f391432f2aa5a3d3706a7e775b1316ccc4c389e69c427b70aceb381d",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x3bB1490Ad830a59A7cFEe00Bf1ac65074Cc91f02",
+      "txHash": "0xcb29705d3128b703c99fb96bf0ec2297756c3b73f4e28866ae1e8d183a86f4d1",
       "kind": "transparent"
     }
   ],
@@ -236,6 +241,233 @@
             "numberOfBytes": "160"
           },
           "t_struct(User)570_storage": {
+            "label": "struct Vault.User",
+            "members": [
+              {
+                "label": "userId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "isClient",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "isFreelancer",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "1"
+              },
+              {
+                "label": "ethInVault",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "ethOutOfVault",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "erc20InVault",
+                "type": "t_mapping(t_address,t_uint256)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "erc20OutOfVault",
+                "type": "t_mapping(t_address,t_uint256)",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "7762672633aa9c75ceb58b21221949fe8a86ed212d1dd06cd751b2f8230b14ed": {
+      "address": "0xD27464A4f21C2c08888A0F37fEF82199BAFabC48",
+      "txHash": "0xf8686c4c29b14a713808737d986237ed34ed7b85be31ed0cca0fd5b7c4831a2f",
+      "layout": {
+        "solcVersion": "0.8.9",
+        "storage": [
+          {
+            "label": "usersId",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "Vault",
+            "src": "contracts\\Vault.sol:13"
+          },
+          {
+            "label": "users",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_address,t_struct(User)575_storage)",
+            "contract": "Vault",
+            "src": "contracts\\Vault.sol:16"
+          },
+          {
+            "label": "feeBank",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address_payable",
+            "contract": "Deelance",
+            "src": "contracts\\Deelance.sol:17"
+          },
+          {
+            "label": "feePercent",
+            "offset": 20,
+            "slot": "2",
+            "type": "t_uint8",
+            "contract": "Deelance",
+            "src": "contracts\\Deelance.sol:20"
+          },
+          {
+            "label": "projectsId",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "Deelance",
+            "src": "contracts\\Deelance.sol:23"
+          },
+          {
+            "label": "projects",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Project)135_storage)",
+            "contract": "Deelance",
+            "src": "contracts\\Deelance.sol:26"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_address_payable": {
+            "label": "address payable",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Milestone)118_storage)dyn_storage": {
+            "label": "struct Deelance.Milestone[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_struct(User)575_storage)": {
+            "label": "mapping(address => struct Vault.User)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Project)135_storage)": {
+            "label": "mapping(uint256 => struct Deelance.Project)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Milestone)118_storage": {
+            "label": "struct Deelance.Milestone",
+            "members": [
+              {
+                "label": "deadline",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "payment",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "isERC",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "token",
+                "type": "t_address",
+                "offset": 1,
+                "slot": "2"
+              },
+              {
+                "label": "completed",
+                "type": "t_bool",
+                "offset": 21,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Project)135_storage": {
+            "label": "struct Deelance.Project",
+            "members": [
+              {
+                "label": "client",
+                "type": "t_address_payable",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "freelancer",
+                "type": "t_address_payable",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "budget",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "milestones",
+                "type": "t_array(t_struct(Milestone)118_storage)dyn_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "completedMilestones",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "completed",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "4"
+              },
+              {
+                "label": "approved",
+                "type": "t_bool",
+                "offset": 2,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(User)575_storage": {
             "label": "struct Vault.User",
             "members": [
               {

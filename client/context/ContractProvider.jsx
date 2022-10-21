@@ -6,6 +6,7 @@ import deelanceABI from "../abi/Deelance.json";
 import { useMoralis } from "react-moralis";
 import { useContext } from "react";
 import { UtilitiesContext } from "./UtilitiesProvider";
+import { FirebaseContext } from "./FirebaseProvider";
 
 export const ContractContext = createContext();
 
@@ -14,6 +15,8 @@ function ContractProvider({ children }) {
   const web3ModalRef = useRef();
 
   const { makeToast } = useContext(UtilitiesContext);
+  const { addToFirebaseArray } = useContext(FirebaseContext);
+
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
   const [userDetailsOnChain, setUserDetailsOnChain] = useState([]);
@@ -112,11 +115,19 @@ function ContractProvider({ children }) {
       return [];
     }
   };
-  const startProject = async (address) => {
+  const startProject = async (gig_orderId, address) => {
+    console.log(ethers.utils.formatBytes32String(`order${gig_orderId}`));
     try {
-      await contract.startProject(address, { gasPrice: 1000000000000 });
+      await contract.startProject(
+        ethers.utils.formatBytes32String(gig_orderId),
+        address,
+        {
+          gasPrice: 1000000000000,
+        }
+      );
       makeToast("Contract Success", "Successfully started project", "success");
     } catch (error) {
+      console.log(error);
       makeToast(
         "Contract Error",
         "An Unknown error occurred while starting project with freelancer provided",
@@ -124,6 +135,38 @@ function ContractProvider({ children }) {
       );
     }
   };
+  // Listening to events
+  contract?.on("StartedProject", (gig_orderId, projectId) => {
+    try {
+      const gig_orderIdString = ethers.utils.parseBytes32String(gig_orderId);
+      if (gig_orderIdString.slice(0, 5) == "order") {
+        addToFirebaseArray(
+          "order",
+          gig_orderIdString.slice(5),
+          "projectsArray",
+          projectId.toString()
+        );
+      } else {
+        addToFirebaseArray(
+          "gig",
+          gig_orderIdString,
+          "projectsArray",
+          projectId.toString()
+        );
+      }
+      makeToast(
+        "Firebase Success",
+        "Successfully added projectId to firebase",
+        "success"
+      );
+    } catch (error) {
+      makeToast(
+        "Firebase Error",
+        "An Unknown error occurred while trying to add projectId to firebase",
+        "error"
+      );
+    }
+  });
   useEffect(() => {
     if (isAuthenticated) {
       web3ModalRef.current = new Web3Modal({

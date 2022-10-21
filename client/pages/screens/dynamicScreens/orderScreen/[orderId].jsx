@@ -35,7 +35,7 @@ function OrderPage() {
     getUserProfile,
     updateOrder,
     deleteOrder,
-    addToBiddersArray,
+    addToFirebaseArray,
   } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
@@ -78,10 +78,10 @@ function OrderPage() {
     setIsDeleting(false);
   };
   const showInterest = async () => {
-    await addToBiddersArray(orderId, address);
+    await addToFirebaseArray("orders", orderId, "biddersArray", address);
   };
-  const orderSeller = async (address) => {
-    await startProject(address);
+  const orderSeller = async (orderId, address) => {
+    await startProject(orderId, address);
   };
   const fetchClientInfo = async (address) => {
     const res = await getUserProfile(address);
@@ -250,7 +250,7 @@ function OrderPage() {
         <Stack p={3} maxW={"lg"}>
           {orderDetails?.biddersArray?.map((_, i) => {
             return address == orderDetails.address ? (
-              <Flex justifyContent={"space-between"}>
+              <Flex justifyContent={"space-between"} key={i}>
                 <Link
                   href={`/screens/dynamicScreens/profileScreen/${_}`}
                   key={i}
@@ -259,7 +259,7 @@ function OrderPage() {
                 </Link>
                 <Button
                   onClick={() => {
-                    orderSeller(_);
+                    orderSeller(orderId, _);
                   }}
                 >
                   Order

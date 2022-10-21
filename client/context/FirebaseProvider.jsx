@@ -35,7 +35,6 @@ const db = getFirestore(app);
 export const FirebaseContext = createContext();
 function FirebaseProvider({ children }) {
   const { makeToast } = useContext(UtilitiesContext);
-
   // firebase functions may be moved to another file later on
   const addCategory = async (newCategory) => {
     try {
@@ -78,7 +77,8 @@ function FirebaseProvider({ children }) {
     address,
     price,
     rating = 0,
-    orderArray = []
+    orderArray = [],
+    projectsArray = []
   ) => {
     try {
       const docRef = await addDoc(collection(db, "gigs"), {
@@ -88,6 +88,7 @@ function FirebaseProvider({ children }) {
         price,
         rating,
         orderArray,
+        projectsArray,
         timestamp: Date.now(),
       });
       makeToast(
@@ -146,7 +147,8 @@ function FirebaseProvider({ children }) {
     address,
     budget,
     rating = 0,
-    biddersArray = []
+    biddersArray = [],
+    projectsArray = []
   ) => {
     try {
       const docRef = await addDoc(collection(db, "orders"), {
@@ -156,6 +158,7 @@ function FirebaseProvider({ children }) {
         budget,
         rating,
         biddersArray,
+        projectsArray,
         timestamp: Date.now(),
       });
       makeToast(
@@ -317,19 +320,29 @@ function FirebaseProvider({ children }) {
       makeToast("Firebase Error", "Error deleting order", "error");
     }
   };
-  const addToBiddersArray = async (orderId, address) => {
+  const addToFirebaseArray = async (
+    collection,
+    orderId,
+    arrayField,
+    parameter
+  ) => {
     try {
-      const docRef = doc(db, "orders", orderId);
+      const docRef = doc(db, collection, orderId);
       await updateDoc(docRef, {
-        biddersArray: arrayUnion(address),
+        [arrayField]: arrayUnion(parameter),
       });
       makeToast(
         "Firebase Success",
-        `Successfully added to bidders list`,
+        `Successfully added to ${arrayField} list`,
         "success"
       );
     } catch (error) {
-      makeToast("Firebase Error", "Error adding to bidders array", "error");
+      console.log(error);
+      makeToast(
+        "Firebase Error",
+        `Error adding to ${arrayField} array`,
+        "error"
+      );
     }
   };
 
@@ -351,7 +364,7 @@ function FirebaseProvider({ children }) {
     updateOrder,
     deleteGig,
     deleteOrder,
-    addToBiddersArray,
+    addToFirebaseArray,
   };
 
   useEffect(() => {

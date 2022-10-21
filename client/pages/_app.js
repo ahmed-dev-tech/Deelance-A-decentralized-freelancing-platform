@@ -14,13 +14,13 @@ function MyApp({ Component, pageProps }) {
     >
       <ChakraProvider resetCSS>
         <UtilitiesProvider>
-          <ContractProvider>
-            <FirebaseProvider>
+          <FirebaseProvider>
+            <ContractProvider>
               <NFTStorageProvider>
                 <Component {...pageProps} />
               </NFTStorageProvider>
-            </FirebaseProvider>
-          </ContractProvider>
+            </ContractProvider>
+          </FirebaseProvider>
         </UtilitiesProvider>
       </ChakraProvider>
     </MoralisProvider>

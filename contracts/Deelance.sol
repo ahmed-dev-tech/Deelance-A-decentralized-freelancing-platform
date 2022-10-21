@@ -29,7 +29,7 @@ contract Deelance is Vault {
     // ALL EVENTS
     
     event MilestoneAdded(uint deadline,uint value);
-    event StartedProject(uint id);
+    event StartedProject(bytes32 indexed gig_orderId,uint id);
     // END OF EVENTS
 
     // milestone struct
@@ -61,7 +61,7 @@ contract Deelance is Vault {
         feePercent=percentage;
     }
     // function to start a new project by client only
-    function startProject(address freelancerAddress)public{
+    function startProject(bytes32 gig_orderId,address freelancerAddress)public{
         require(msg.sender!=freelancerAddress,'You cannot work for yourself');
         if(!users[msg.sender].isClient){
             registerClient();
@@ -75,7 +75,7 @@ contract Deelance is Vault {
         newProject.milestones;
         newProject.completed=false;
         newProject.approved=false;
-        emit StartedProject(projectsId);
+        emit StartedProject(gig_orderId,projectsId);
     } 
     // function to accept invitation to start project
     function joinProject(uint projectId)public{
