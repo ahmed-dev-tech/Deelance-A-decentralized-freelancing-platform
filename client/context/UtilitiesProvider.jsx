@@ -21,7 +21,16 @@ function UtilitiesProvider({ children }) {
       : `${text.slice(0, characters - 3)}...`;
   };
   const makeToast = (title, description, status) => {
-    toast({ title, description, status, duration: 9000, isClosable: true });
+    if (!toast.isActive(description)) {
+      toast({
+        title,
+        description,
+        status,
+        duration: 9000,
+        isClosable: true,
+        id: description,
+      });
+    }
   };
   const data = {
     shortenAddress,

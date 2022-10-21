@@ -114,7 +114,7 @@ function ContractProvider({ children }) {
   };
   const startProject = async (address) => {
     try {
-      await contract.startProject(address);
+      await contract.startProject(address, { gasPrice: 1000000000000 });
       makeToast("Contract Success", "Successfully started project", "success");
     } catch (error) {
       makeToast(
