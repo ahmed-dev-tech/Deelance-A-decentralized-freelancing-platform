@@ -21,9 +21,13 @@ const SellerTabContent = (props) => {
       <Heading fontSize="2xl">Sub category</Heading>
       <Box py={5}>
         <Stack spacing={8}>
-          {orders.map((_, i) => {
-            return <OrderCard content={_} key={i} />;
-          })}
+          {orders.length ? (
+            orders.map((_, i) => {
+              return <OrderCard content={_} key={i} />;
+            })
+          ) : (
+            <Text>There are no orders here</Text>
+          )}
         </Stack>
       </Box>
     </Box>

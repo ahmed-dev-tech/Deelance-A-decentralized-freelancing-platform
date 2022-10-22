@@ -15,6 +15,7 @@ import {
   updateDoc,
   deleteDoc,
   arrayUnion,
+  startAfter,
 } from "firebase/firestore";
 import { UtilitiesContext } from "./UtilitiesProvider";
 
@@ -345,7 +346,24 @@ function FirebaseProvider({ children }) {
       );
     }
   };
-
+  const getMoreGigs = async (lastVisible) => {
+    try {
+      const docRef = query(
+        collection(db, "gigs"),
+        orderBy("rating"),
+        startAfter(lastVisible),
+        limit(25)
+      );
+      const docSnap = await getDocs(docRef);
+      let res = [];
+      docSnap.forEach((doc) => {
+        res.push({ ...doc.data(), id: doc.id });
+      });
+      return res;
+    } catch (error) {
+      makeToast("Firebase Error", "Couldn't fetch more gigs", "error");
+    }
+  };
   const [categories, setCategories] = useState([]);
   const data = {
     db,
@@ -365,6 +383,7 @@ function FirebaseProvider({ children }) {
     deleteGig,
     deleteOrder,
     addToFirebaseArray,
+    getMoreGigs,
   };
 
   useEffect(() => {
