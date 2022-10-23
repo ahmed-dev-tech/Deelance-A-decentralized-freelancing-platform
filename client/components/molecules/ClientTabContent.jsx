@@ -32,21 +32,21 @@ const ClientTabContent = (props) => {
             </div>
           }
           useWindow={false}
+        > */}
+        <HStack
+          style={{ scrollbarWidth: "none" }}
+          spacing={8}
+          overflowX="scroll"
         >
-          <HStack
-            style={{ scrollbarWidth: "none" }}
-            spacing={8}
-            overflowX="scroll"
-          >
-            {gigs.length ? (
-              gigs.map((_, i) => {
-                return <GigCard content={_} key={i} />;
-              })
-            ) : (
-              <Text>There are no gigs here</Text>
-            )}
-          </HStack>
-        </InfiniteScroll> */}
+          {gigs.length ? (
+            gigs.map((_, i) => {
+              return <GigCard content={_} key={i} />;
+            })
+          ) : (
+            <Text>There are no gigs here</Text>
+          )}
+        </HStack>
+        {/* </InfiniteScroll> */}
       </Box>
     </Box>
   );

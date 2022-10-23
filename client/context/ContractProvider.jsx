@@ -139,16 +139,17 @@ function ContractProvider({ children }) {
   contract?.on("StartedProject", (gig_orderId, projectId) => {
     try {
       const gig_orderIdString = ethers.utils.parseBytes32String(gig_orderId);
+      console.log(gig_orderIdString);
       if (gig_orderIdString.slice(0, 5) == "order") {
         addToFirebaseArray(
-          "order",
+          "orders",
           gig_orderIdString.slice(5),
           "projectsArray",
           projectId.toString()
         );
       } else {
         addToFirebaseArray(
-          "gig",
+          "gigs",
           gig_orderIdString,
           "projectsArray",
           projectId.toString()

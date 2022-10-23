@@ -82,7 +82,7 @@ function OrderPage() {
     await addToFirebaseArray("orders", orderId, "biddersArray", address);
   };
   const orderSeller = async (orderId, address) => {
-    await startProject(orderId, address);
+    await startProject(`order${orderId}`, address);
   };
   const fetchClientInfo = async (address) => {
     const res = await getUserProfile(address);
