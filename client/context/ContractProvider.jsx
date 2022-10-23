@@ -99,7 +99,7 @@ function ContractProvider({ children }) {
   };
   const _getUserDetailsOnChain = async (address) => {
     try {
-      const info = await contract.users(address, { gasLimit: 50000 });
+      const info = await contract.users(address);
       makeToast(
         "Contract Success",
         "Successfully retrieved user details",
@@ -116,7 +116,6 @@ function ContractProvider({ children }) {
     }
   };
   const startProject = async (gig_orderId, address) => {
-    console.log(ethers.utils.formatBytes32String(`order${gig_orderId}`));
     try {
       await contract.startProject(
         ethers.utils.formatBytes32String(gig_orderId),
@@ -135,8 +134,27 @@ function ContractProvider({ children }) {
       );
     }
   };
+  const getProjectDetailsOnChain = async (projectId) => {
+    try {
+      const info = await contract.projects(projectId);
+      makeToast(
+        "Contract Success",
+        "Successfully retrieved project details",
+        "success"
+      );
+      return info;
+    } catch (error) {
+      console.log(error);
+      makeToast(
+        "Contract Error",
+        "An Unknown error occurred while retrieving project details",
+        "error"
+      );
+      return [];
+    }
+  };
   // Listening to events
-  contract?.on("StartedProject", (gig_orderId, projectId) => {
+  contract?.once("StartedProject", (gig_orderId, projectId) => {
     try {
       const gig_orderIdString = ethers.utils.parseBytes32String(gig_orderId);
       console.log(gig_orderIdString);
@@ -199,6 +217,7 @@ function ContractProvider({ children }) {
     registerClient,
     userDetailsOnChain,
     startProject,
+    getProjectDetailsOnChain,
   };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>

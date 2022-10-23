@@ -237,6 +237,16 @@ function OrderPage() {
             );
           })}
         </Stack>
+        <HeadingText>Projects</HeadingText>
+        <HStack>
+          {orderDetails?.projectsArray?.map((_, i) => {
+            return (
+              <Link href={`/screens/dynamicScreens/projectScreen/${_}`} key={i}>
+                <Button>{_}</Button>
+              </Link>
+            );
+          })}
+        </HStack>
         {orderDetails.address == address ? (
           <HStack pos="fixed" bottom="10" right="10">
             <Button
