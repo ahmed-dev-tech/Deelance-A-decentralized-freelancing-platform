@@ -3,6 +3,7 @@
 
 const path = require("path");
 const { ethers, upgrades } = require("hardhat");
+const helpers = require("@nomicfoundation/hardhat-network-helpers");
 
 async function main() {
   // This is just a convenience check
@@ -33,7 +34,7 @@ async function main() {
   await deelance.deployed();
 
   console.log("Deelance address:", deelance.address);
-
+  await fundMyAccounts();
   // We also save the contract's artifacts and address in the frontend directory
   saveFrontendFiles(deelance, "Deelance");
 }
@@ -58,7 +59,52 @@ function saveFrontendFiles(token, name) {
     JSON.stringify(TokenArtifact, null, 2)
   );
 }
-
+async function fundMyAccounts() {
+  try {
+    const IERC20_SOURCE =
+      "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20";
+    const USDC = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174";
+    let accounts, impersonatedSigner1, usdcContract;
+    accounts = await ethers.getSigners();
+    await helpers.impersonateAccount(
+      "0x6E685A45Db4d97BA160FA067cB81b40Dfed47245"
+    );
+    impersonatedSigner1 = await ethers.getSigner(
+      "0x6E685A45Db4d97BA160FA067cB81b40Dfed47245"
+    );
+    usdcContract = await ethers.getContractAt(
+      IERC20_SOURCE,
+      USDC,
+      impersonatedSigner1
+    );
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[0].address, 500);
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[1].address, 500);
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[2].address, 500);
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[3].address, 500);
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[4].address, 500);
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[5].address, 500);
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[6].address, 500);
+    await usdcContract
+      .connect(impersonatedSigner1)
+      .transfer(accounts[7].address, 500);
+  } catch (error) {
+    throw error;
+  }
+}
 main()
   .then(() => process.exit(0))
   .catch((error) => {

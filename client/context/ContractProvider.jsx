@@ -3,6 +3,9 @@ import { ethers, providers } from "ethers";
 import Web3Modal from "web3modal";
 import deelance from "../abi/Deelance-address.json";
 import deelanceABI from "../abi/Deelance.json";
+import dai from "../abi/polygonTokens/DaiToken.json";
+import usdc from "../abi/polygonTokens/UsdcToken.json";
+import usdt from "../abi/polygonTokens/UsdtToken.json";
 import { useMoralis } from "react-moralis";
 import { useContext } from "react";
 import { UtilitiesContext } from "./UtilitiesProvider";
@@ -155,33 +158,40 @@ function ContractProvider({ children }) {
       return [];
     }
   };
-  const fundVault = async (amount, token) => {
+  const fundVault = async (amount, tokenAddress) => {
     try {
-      console.log(amount, token);
+      console.log(amount, tokenAddress);
       let info;
-      if (token == "native") {
+      if (tokenAddress == "native") {
         info = await provider.getSigner().sendTransaction({
           to: contract.address,
           value: ethers.utils.parseEther(amount),
           gasPrice: 1000000000000,
         });
       } else {
-        // const tokenContract = await ethers.getContractAt(
-        //   IERC20_SOURCE,
-        //   token,
-        //   provider.getSigner()
-        // );
-        let tokenContract;
-        switch (key) {
-          case value:
+        let tokenAbi, tokenContract;
+        switch (tokenAddress) {
+          case dai.address:
+            tokenAbi = dai.abi;
             break;
-
+          case usdc.address:
+            tokenAbi = usdc.abi;
+            break;
+          case usdt.address:
+            tokenAbi = usdt.abi;
+            break;
           default:
             break;
         }
-        tokenContract = await getContract(token, tokenAbi);
-        await tokenContract.approve(contract.address, amount);
-        info = await contract.fundWithERC20(amount, token);
+        tokenContract = await getContract(tokenAddress, tokenAbi);
+        console.log("here1");
+        await tokenContract.approve(contract.address, amount, {
+          gasPrice: 100000000000,
+        });
+        console.log("here2");
+        info = await contract.fundWithERC20(amount, tokenAddress, {
+          gasPrice: 100000000000,
+        });
         console.log(provider.getSigner(), info);
       }
     } catch (error) {
