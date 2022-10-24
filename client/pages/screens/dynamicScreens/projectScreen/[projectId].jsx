@@ -26,14 +26,14 @@ function ProjectPage(props) {
       <Box p={5}>
         {address == projectDetails?.client || projectDetails?.freelancer ? (
           <Box>
-            {address == projectDetails?.freelancer &&
+            {address == projectDetails.freelancer &&
               projectDetails.approved == false && (
                 <Button pos="fixed" bottom="10" right="10">
                   JOIN PROJECT
                 </Button>
               )}
             {
-              address == projectDetails?.client && <Text>hello</Text>
+              address == projectDetails.client && <Text>hello</Text>
               //   <Box pos="fixed" bottom="10" right="10">
               //     <AddMilestone />
               //   </Box>

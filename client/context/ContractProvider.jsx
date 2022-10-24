@@ -8,6 +8,8 @@ import { useContext } from "react";
 import { UtilitiesContext } from "./UtilitiesProvider";
 import { FirebaseContext } from "./FirebaseProvider";
 
+const IERC20_SOURCE = "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20";
+
 export const ContractContext = createContext();
 
 function ContractProvider({ children }) {
@@ -19,9 +21,8 @@ function ContractProvider({ children }) {
 
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
+  const [provider, setProvider] = useState(null);
   const [userDetailsOnChain, setUserDetailsOnChain] = useState([]);
-
-  let myProvider;
 
   // contract address is rinkeby's
   const getProviderOrSigner = async (needSigner = false) => {
@@ -45,13 +46,14 @@ function ContractProvider({ children }) {
     return web3Provider;
   };
 
-  const getContract = async (withSigner = false) => {
-    const provider = await getProviderOrSigner(withSigner);
-    return new ethers.Contract(deelance.Deelance, deelanceABI.abi, provider);
+  const getContract = async (address, abi) => {
+    let mySigner = await getProviderOrSigner(true);
+    return new ethers.Contract(address, abi, mySigner);
   };
 
   const getAccounts = async () => {
-    myProvider = await getProviderOrSigner(false);
+    let myProvider = await getProviderOrSigner(false);
+    setProvider(myProvider);
     let accounts = await myProvider.send("eth_requestAccounts", []);
     return accounts[0];
   };
@@ -153,6 +155,44 @@ function ContractProvider({ children }) {
       return [];
     }
   };
+  const fundVault = async (amount, token) => {
+    try {
+      console.log(amount, token);
+      let info;
+      if (token == "native") {
+        info = await provider.getSigner().sendTransaction({
+          to: contract.address,
+          value: ethers.utils.parseEther(amount),
+          gasPrice: 1000000000000,
+        });
+      } else {
+        // const tokenContract = await ethers.getContractAt(
+        //   IERC20_SOURCE,
+        //   token,
+        //   provider.getSigner()
+        // );
+        let tokenContract;
+        switch (key) {
+          case value:
+            break;
+
+          default:
+            break;
+        }
+        tokenContract = await getContract(token, tokenAbi);
+        await tokenContract.approve(contract.address, amount);
+        info = await contract.fundWithERC20(amount, token);
+        console.log(provider.getSigner(), info);
+      }
+    } catch (error) {
+      console.log(error);
+      makeToast(
+        "Contract Error",
+        "An Unknown error occurred while funding vault",
+        "error"
+      );
+    }
+  };
   // Listening to events
   contract?.once("StartedProject", (gig_orderId, projectId) => {
     try {
@@ -193,7 +233,9 @@ function ContractProvider({ children }) {
         providerOptions: {},
         disableInjectedProvider: false,
       });
-      getContract(true).then((res) => setContract(res));
+      getContract(deelance.Deelance, deelanceABI.abi).then((res) =>
+        setContract(res)
+      );
       getAccounts().then((res) => setAddress(res));
     }
   }, [isAuthenticated]);
@@ -218,6 +260,7 @@ function ContractProvider({ children }) {
     userDetailsOnChain,
     startProject,
     getProjectDetailsOnChain,
+    fundVault,
   };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>

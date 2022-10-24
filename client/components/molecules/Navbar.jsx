@@ -20,6 +20,7 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ContractContext } from "../../context/ContractProvider";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
+import FundVault from "../atoms/FundVault";
 
 function Navbar(props) {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -37,7 +38,10 @@ function Navbar(props) {
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
               {isAuthenticated ? (
-                <Button>{shortenAddress(address)}</Button>
+                <>
+                  <Button>{shortenAddress(address)}</Button>
+                  <FundVault />
+                </>
               ) : (
                 <Button
                   onClick={authenticate}
