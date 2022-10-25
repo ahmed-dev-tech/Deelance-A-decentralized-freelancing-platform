@@ -22,12 +22,12 @@ function GigCard({ content }) {
   const [gigImage, setGigImage] = useState("");
   const fetchMetaData = async () => {
     let res = await axios.get(
-      `https://${content.ipfsHash}.ipfs.ipfs-gateway.cloud/metadata.json`
+      `https://${content.ipfsHash}.ipfs.nftstorage.link/metadata.json`
     );
     setGigName(res.data.name);
     const [cid, fileName] = res.data.image.slice(7).split("/");
     console.log(cid, fileName);
-    setGigImage(`https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`);
+    setGigImage(`https://${cid}.ipfs.nftstorage.link/${fileName}`);
   };
   useEffect(() => {
     fetchMetaData();

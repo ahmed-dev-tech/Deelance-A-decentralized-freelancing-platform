@@ -87,26 +87,26 @@ function OrderPage() {
   const fetchClientInfo = async (address) => {
     const res = await getUserProfile(address);
     let ipfsRes = await axios.get(
-      `https://${res.ipfsHash}.ipfs.ipfs-gateway.cloud/metadata.json`
+      `https://${res.ipfsHash}.ipfs.nftstorage.link/metadata.json`
     );
     const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
     setClientInfo({
       name: ipfsRes.data.name,
       bio: ipfsRes.data.description,
-      image: `https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`,
+      image: `https://${cid}.ipfs.nftstorage.link/${fileName}`,
     });
   };
   const prepareOrderDetails = async () => {
     const firebaseRes = await fetchOrderDetails(orderId);
     let ipfsRes = await axios.get(
-      `https://${firebaseRes.ipfsHash}.ipfs.ipfs-gateway.cloud/metadata.json`
+      `https://${firebaseRes.ipfsHash}.ipfs.nftstorage.link/metadata.json`
     );
     const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
     setOrderDetails({
       ...firebaseRes,
       name: ipfsRes.data.name,
       description: ipfsRes.data.description,
-      image: `https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`,
+      image: `https://${cid}.ipfs.nftstorage.link/${fileName}`,
     });
   };
   useEffect(() => {

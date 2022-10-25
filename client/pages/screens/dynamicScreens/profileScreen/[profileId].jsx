@@ -69,16 +69,16 @@ function ProfilePage(props) {
       const firebaseRes = await getUserProfile(profileId);
       if (!firebaseRes.ipfsHash) setProfileDetails({});
       let ipfsRes = await axios.get(
-        `https://${firebaseRes.ipfsHash}.ipfs.ipfs-gateway.cloud/metadata.json`
+        `https://${firebaseRes.ipfsHash}.ipfs.nftstorage.link/metadata.json`
       );
       const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
       setProfileDetails({
         ...firebaseRes,
         name: ipfsRes.data.name,
         bio: ipfsRes.data.description,
-        image: `https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`,
+        image: `https://${cid}.ipfs.nftstorage.link/${fileName}`,
       });
-      console.log(`https://${cid}.ipfs.ipfs-gateway.cloud/${fileName}`);
+      console.log(`https://${cid}.ipfs.nftstorage.link/${fileName}`);
     } catch (error) {
       setProfileDetails({});
     }
