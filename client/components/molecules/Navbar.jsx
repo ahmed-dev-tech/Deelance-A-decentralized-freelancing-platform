@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { useMoralis } from "react-moralis";
 import {
   Box,
@@ -20,15 +20,42 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ContractContext } from "../../context/ContractProvider";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
+import dai from "../../abi/polygonTokens/DaiToken.json";
+import usdc from "../../abi/polygonTokens/UsdcToken.json";
+import usdt from "../../abi/polygonTokens/UsdtToken.json";
 import FundVault from "../atoms/FundVault";
+import { useEffect } from "react";
+import { ethers } from "ethers";
 
 function Navbar(props) {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { authenticate, isAuthenticated, isWeb3Enabled } = useMoralis();
-  const { address } = useContext(ContractContext);
+  const { address, contract, getVaultBalance } = useContext(ContractContext);
   const { shortenAddress, isFreelancer } = useContext(UtilitiesContext);
 
+  const [fundInVault, setFundInVault] = useState({
+    native: 0,
+    stableCoins: { dai: 0, usdc: 0, usdt: 0 },
+  });
+  const getTokensBalance = async (depositorAddress) => {
+    const native = await getVaultBalance(depositorAddress, "native");
+    const daiBal = await getVaultBalance(depositorAddress, dai.address);
+    const usdcBal = await getVaultBalance(depositorAddress, usdc.address);
+    const usdtBal = await getVaultBalance(depositorAddress, usdt.address);
+    console.log(daiBal, usdcBal.toNumber());
+    setFundInVault({
+      native: native.toString(),
+      stableCoins: {
+        dai: daiBal.toNumber(),
+        usdc: usdcBal.toNumber(),
+        usdt: usdtBal.toNumber(),
+      },
+    });
+  };
+  useEffect(() => {
+    address && contract && getTokensBalance(address);
+  }, [contract, address]);
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
@@ -97,9 +124,16 @@ function Navbar(props) {
                       <Link href={"/screens/Freelancer"}>Be a Freelancer</Link>
                     </MenuItem>
                   )}
+                  <MenuItem>{`Funds=${ethers.utils.formatEther(
+                    fundInVault.native
+                  )}Eth, $${
+                    fundInVault.stableCoins.dai +
+                    fundInVault.stableCoins.usdc +
+                    fundInVault.stableCoins.usdt
+                  }`}</MenuItem>
                   <MenuItem>Account Settings</MenuItem>
                   <MenuItem>Logout</MenuItem>
-                  {address == 0x741dfbfa5843311fed71f65967cf2e766b9c33bd && (
+                  {address == "0x741dfbfa5843311fed71f65967cf2e766b9c33bd" && (
                     <MenuItem>
                       <Link href={"/screens/Admin"}>Admin Panel</Link>
                     </MenuItem>

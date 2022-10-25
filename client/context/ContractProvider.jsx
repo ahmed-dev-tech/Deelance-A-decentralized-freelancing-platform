@@ -160,7 +160,6 @@ function ContractProvider({ children }) {
   };
   const fundVault = async (amount, tokenAddress) => {
     try {
-      console.log(amount, tokenAddress);
       let info;
       if (tokenAddress == "native") {
         info = await provider.getSigner().sendTransaction({
@@ -201,6 +200,25 @@ function ContractProvider({ children }) {
         "An Unknown error occurred while funding vault",
         "error"
       );
+    }
+  };
+  const getVaultBalance = async (
+    depositor = address,
+    tokenAddress = "native"
+  ) => {
+    try {
+      if (tokenAddress == "native") {
+        const ethInVault = await contract.getEthInVault(depositor);
+        return ethInVault;
+      } else {
+        const tokenInVault = await contract.getERC20InVault(
+          depositor,
+          tokenAddress
+        );
+        return tokenInVault;
+      }
+    } catch (error) {
+      throw error;
     }
   };
   // Listening to events
@@ -271,6 +289,7 @@ function ContractProvider({ children }) {
     startProject,
     getProjectDetailsOnChain,
     fundVault,
+    getVaultBalance,
   };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>
