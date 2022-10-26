@@ -78,8 +78,7 @@ function FirebaseProvider({ children }) {
     address,
     price,
     rating = 0,
-    orderArray = [],
-    projectsArray = []
+    orderArray = []
   ) => {
     try {
       const docRef = await addDoc(collection(db, "gigs"), {
@@ -89,7 +88,6 @@ function FirebaseProvider({ children }) {
         price,
         rating,
         orderArray,
-        projectsArray,
         timestamp: Date.now(),
       });
       makeToast(
@@ -148,8 +146,7 @@ function FirebaseProvider({ children }) {
     address,
     budget,
     rating = 0,
-    biddersArray = [],
-    projectsArray = []
+    biddersArray = []
   ) => {
     try {
       const docRef = await addDoc(collection(db, "orders"), {
@@ -159,7 +156,6 @@ function FirebaseProvider({ children }) {
         budget,
         rating,
         biddersArray,
-        projectsArray,
         timestamp: Date.now(),
       });
       makeToast(
@@ -321,6 +317,55 @@ function FirebaseProvider({ children }) {
       makeToast("Firebase Error", "Error deleting order", "error");
     }
   };
+  const addNewProject = async (collection, gigOrderId, projectId) => {
+    try {
+      const docRef = doc(db, collection, gigOrderId, "projects", projectId);
+      const firebaseRes = await setDoc(docRef, { milestones: [], projectId });
+    } catch (error) {
+      throw error;
+    }
+  };
+  const addMilestoneToProject = async (
+    collection,
+    gigOrderId,
+    projectId,
+    milestoneData
+  ) => {
+    try {
+      const docRef = doc(db, collection, gigOrderId, "projects", projectId);
+      await updateDoc(docRef, {
+        milestones: arrayUnion(milestoneData),
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+  const getAllProjects = async (collection, gigOrderId, lim = 10) => {
+    try {
+      const docRef = query(
+        collection(db, collection, gigOrderId, "projects"),
+        orderBy("projectId"),
+        limit(lim)
+      );
+      const docSnap = await getDocs(docRef);
+      let res = [];
+      docSnap.forEach((doc) => {
+        res.push({ ...doc.data() });
+      });
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const getProjectDetails = async (collection, gigOrderId, projectId) => {
+    try {
+      const docRef = doc(db, collection, gigOrderId, "projects", projectId);
+      const docSnap = await getDoc(docRef);
+      return docSnap.data();
+    } catch (error) {
+      throw error;
+    }
+  };
   const addToFirebaseArray = async (
     collection,
     orderId,
@@ -384,6 +429,8 @@ function FirebaseProvider({ children }) {
     deleteOrder,
     addToFirebaseArray,
     getMoreGigs,
+    addNewProject,
+    addMilestoneToProject,
   };
 
   useEffect(() => {

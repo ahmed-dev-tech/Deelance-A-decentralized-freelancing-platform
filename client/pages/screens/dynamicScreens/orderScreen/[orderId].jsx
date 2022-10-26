@@ -98,6 +98,7 @@ function OrderPage() {
   };
   const prepareOrderDetails = async () => {
     const firebaseRes = await fetchOrderDetails(orderId);
+    console.log(firebaseRes);
     let ipfsRes = await axios.get(
       `https://${firebaseRes.ipfsHash}.ipfs.nftstorage.link/metadata.json`
     );

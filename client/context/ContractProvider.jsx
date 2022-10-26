@@ -20,8 +20,7 @@ function ContractProvider({ children }) {
   const web3ModalRef = useRef();
 
   const { makeToast } = useContext(UtilitiesContext);
-  const { addToFirebaseArray } = useContext(FirebaseContext);
-
+  const { addNewProject, addMilestoneToProject } = useContext(FirebaseContext);
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState(null);
@@ -224,10 +223,9 @@ function ContractProvider({ children }) {
   const addMilestone = async (
     projectId,
     deadline,
-    isERC = true,
+    isERC = false,
     token = address,
-    amount = 0,
-    ethAmount = 0
+    amount = 0
   ) => {
     try {
       await contract.addMilestone(
@@ -235,10 +233,9 @@ function ContractProvider({ children }) {
         deadline,
         isERC,
         token,
-        amount,
-        ethAmount,
+        isERC ? amount : ethers.utils.parseEther(amount),
         {
-          gasPrice: 100000000000,
+          gasLimit: 3000000,
         }
       );
     } catch (error) {
@@ -251,19 +248,13 @@ function ContractProvider({ children }) {
       const gig_orderIdString = ethers.utils.parseBytes32String(gig_orderId);
       console.log(gig_orderIdString);
       if (gig_orderIdString.slice(0, 5) == "order") {
-        addToFirebaseArray(
+        addNewProject(
           "orders",
           gig_orderIdString.slice(5),
-          "projectsArray",
           projectId.toString()
         );
       } else {
-        addToFirebaseArray(
-          "gigs",
-          gig_orderIdString,
-          "projectsArray",
-          projectId.toString()
-        );
+        addNewProject("gigs", gig_orderIdString, projectId.toString());
       }
       makeToast(
         "Firebase Success",

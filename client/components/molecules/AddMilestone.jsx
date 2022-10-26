@@ -12,6 +12,7 @@ import {
   FormLabel,
   Flex,
   Input,
+  Textarea,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
@@ -34,10 +35,9 @@ function AddMilestone({ projectId }) {
     await addMilestone(
       projectId,
       Date.parse(startDate),
-      milestoneBudget.token == "native",
+      milestoneBudget.token != "native",
       milestoneBudget.token == "native" ? address : milestoneBudget.token,
-      milestoneBudget.value,
-      milestoneBudget.value
+      Number(milestoneBudget.value)
     );
   };
   return (
@@ -59,6 +59,14 @@ function AddMilestone({ projectId }) {
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
+              <FormLabel>What's the topic</FormLabel>
+              <Input borderTop={"none"} borderRight={"none"} />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Describe the milestone</FormLabel>
+              <Textarea borderTop={"none"} borderRight={"none"} />
+            </FormControl>
+            <FormControl>
               <FormLabel>Pick a deadline</FormLabel>
               <DatePicker
                 selected={startDate}
@@ -74,8 +82,10 @@ function AddMilestone({ projectId }) {
               <Flex justifyContent="left" alignContent="center">
                 <Input
                   type={"number"}
-                  width={"xs"}
+                  width={"3xs"}
                   mr={"3"}
+                  borderTop={"none"}
+                  borderX={"none"}
                   onChange={(e) =>
                     setMilestoneBudget({
                       ...milestoneBudget,
