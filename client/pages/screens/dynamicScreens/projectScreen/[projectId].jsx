@@ -13,27 +13,20 @@ function ProjectPage(props) {
 
   const { address, getProjectDetailsOnChain } = useContext(ContractContext);
 
-  const [projectDetails, setProjectDetails] = useState([]);
+  const [projectDetails, setProjectDetails] = useState({});
   useEffect(() => {
     projectId &&
       getProjectDetailsOnChain(projectId).then((res) => setProjectDetails(res));
   }, [projectId, address]);
   console.log(projectDetails);
-
   return (
     <>
       <Navbar />
       <Box p={5}>
-        {address == projectDetails?.client || projectDetails?.freelancer ? (
+        {projectDetails.client == address ? (
           <Box>
-            {address == projectDetails.freelancer &&
-              projectDetails.approved == false && (
-                <Button pos="fixed" bottom="10" right="10">
-                  JOIN PROJECT
-                </Button>
-              )}
             {
-              address == projectDetails.client && <Text>hello</Text>
+              <Text>hello</Text>
               //   <Box pos="fixed" bottom="10" right="10">
               //     <AddMilestone />
               //   </Box>
