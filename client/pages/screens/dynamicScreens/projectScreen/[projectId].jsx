@@ -1,4 +1,12 @@
-import { Box, Button, Checkbox, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  Progress,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useContext } from "react";
@@ -18,22 +26,29 @@ function ProjectPage(props) {
     projectId &&
       getProjectDetailsOnChain(projectId).then((res) => setProjectDetails(res));
   }, [projectId, address]);
-  console.log(projectDetails);
   return (
     <>
       <Navbar />
       <Box p={5}>
-        {projectDetails.client == address ? (
-          <Box>
-            {
-              <Text>hello</Text>
-              //   <Box pos="fixed" bottom="10" right="10">
-              //     <AddMilestone />
-              //   </Box>
-            }
-          </Box>
+        {projectDetails?.client?.toLowerCase() == address?.toLowerCase() ? (
+          <Flex direction={"column"} justifyContent={"space-evenly"}>
+            <Progress colorScheme="green" height="32px" value={20} />
+            <Box p={5}>
+              <Stack spacing={5} direction="column">
+                <Checkbox colorScheme="red" defaultChecked>
+                  Checkbox
+                </Checkbox>
+                <Checkbox colorScheme="red" defaultChecked>
+                  Checkbox
+                </Checkbox>
+              </Stack>
+            </Box>
+            <Box pos="fixed" bottom="10" right="10">
+              <AddMilestone projectId={projectId} />
+            </Box>
+          </Flex>
         ) : (
-          <Box>You are not allowed to view this workspace</Box>
+          <Box></Box>
         )}
       </Box>
     </>

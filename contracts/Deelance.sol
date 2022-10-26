@@ -28,7 +28,7 @@ contract Deelance is Vault {
 
     // ALL EVENTS
     
-    event MilestoneAdded(uint deadline,uint value);
+    event MilestoneAdded(uint indexed projectId,uint deadline,uint amount);
     event StartedProject(bytes32 indexed gig_orderId,uint id);
     // END OF EVENTS
 
@@ -85,20 +85,20 @@ contract Deelance is Vault {
         projects[projectId].approved=true;
     }
     // function to add milestone to projects
-    function addMilestone(uint projectId,uint deadline,bool isERC,address _token,uint _amount,uint _ethAmount)public payable{
+    function addMilestone(uint projectId,uint deadline,bool isERC,address _token,uint _amount)public payable{
         // probably will remove _ethAmount and leave _amount only
         require (projects[projectId].client==msg.sender,'You are not the owner of this project');
         if (!isERC){
-            require(users[msg.sender].ethInVault>=_ethAmount,"not enough eth in vault");
+            require(users[msg.sender].ethInVault>=_amount,"not enough eth in vault");
             projects[projectId].milestones.push(Milestone(
                 deadline,
-                _ethAmount,
+                _amount,
                 isERC,
                 _token,
                 false
             ));
-            users[msg.sender].ethInVault-=_ethAmount;
-            users[msg.sender].ethOutOfVault+=_ethAmount;
+            users[msg.sender].ethInVault-=_amount;
+            users[msg.sender].ethOutOfVault+=_amount;
         }else{
             // perform a check to know if token is actually an ERC20
             require(users[msg.sender].erc20InVault[_token]>=_amount,"not enough erc20 token in vault");
@@ -112,6 +112,7 @@ contract Deelance is Vault {
             users[msg.sender].erc20InVault[_token]-=_amount;
             users[msg.sender].erc20OutOfVault[_token]+=_amount;
         }
+        emit MilestoneAdded(projectId,deadline, _amount);
     }
     //function to mark a milestone as completed 
     function milestoneCompleted(uint projectId,uint8 milestoneId)public{

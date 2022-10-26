@@ -221,6 +221,30 @@ function ContractProvider({ children }) {
       throw error;
     }
   };
+  const addMilestone = async (
+    projectId,
+    deadline,
+    isERC = true,
+    token = address,
+    amount = 0,
+    ethAmount = 0
+  ) => {
+    try {
+      await contract.addMilestone(
+        projectId,
+        deadline,
+        isERC,
+        token,
+        amount,
+        ethAmount,
+        {
+          gasPrice: 100000000000,
+        }
+      );
+    } catch (error) {
+      throw error;
+    }
+  };
   // Listening to events
   contract?.once("StartedProject", (gig_orderId, projectId) => {
     try {
@@ -252,6 +276,12 @@ function ContractProvider({ children }) {
         "An Unknown error occurred while trying to add projectId to firebase",
         "error"
       );
+    }
+  });
+  contract?.once("MilestoneAdded", (projectId, deadline, amount) => {
+    try {
+    } catch (error) {
+      throw error;
     }
   });
   useEffect(() => {
@@ -290,6 +320,7 @@ function ContractProvider({ children }) {
     getProjectDetailsOnChain,
     fundVault,
     getVaultBalance,
+    addMilestone,
   };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>
