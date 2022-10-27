@@ -235,9 +235,24 @@ function ContractProvider({ children }) {
         token,
         isERC ? amount : ethers.utils.parseEther(amount),
         {
-          gasLimit: 3000000,
+          gasPrice: 17231855767,
         }
       );
+    } catch (error) {
+      throw error;
+    }
+  };
+  const milestoneCompleted = async (projectId, milestoneId) => {
+    try {
+      await contract.milestoneCompleted(projectId, milestoneId);
+    } catch (error) {
+      throw error;
+    }
+  };
+  const getMilestones = async (projectId) => {
+    try {
+      const res = await contract.getMilestones(projectId);
+      return res;
     } catch (error) {
       throw error;
     }
@@ -316,6 +331,8 @@ function ContractProvider({ children }) {
     fundVault,
     getVaultBalance,
     addMilestone,
+    getMilestones,
+    milestoneCompleted,
   };
   return (
     <ContractContext.Provider value={data}>{children}</ContractContext.Provider>
