@@ -37,6 +37,7 @@ function OrderPage() {
     updateOrder,
     deleteOrder,
     addToFirebaseArray,
+    getAllProjects,
   } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
@@ -103,12 +104,15 @@ function OrderPage() {
       `https://${firebaseRes.ipfsHash}.ipfs.nftstorage.link/metadata.json`
     );
     const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
+    const projects = await getAllProjects("orders", orderId, 10);
     setOrderDetails({
       ...firebaseRes,
+      projectsArray: projects,
       name: ipfsRes.data.name,
       description: ipfsRes.data.description,
       image: `https://${cid}.ipfs.nftstorage.link/${fileName}`,
     });
+    // get all started projects
   };
   useEffect(() => {
     orderId && prepareOrderDetails();
@@ -242,8 +246,11 @@ function OrderPage() {
         <HStack>
           {orderDetails?.projectsArray?.map((_, i) => {
             return (
-              <Link href={`/screens/dynamicScreens/projectScreen/${_}`} key={i}>
-                <Button>{_}</Button>
+              <Link
+                href={`/screens/dynamicScreens/projectScreen/${_.projectId}/orders/${orderId}`}
+                key={i}
+              >
+                <Button>{_.projectId}</Button>
               </Link>
             );
           })}

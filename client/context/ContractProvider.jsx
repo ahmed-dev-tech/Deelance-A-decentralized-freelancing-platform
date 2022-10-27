@@ -269,12 +269,16 @@ function ContractProvider({ children }) {
       );
     }
   });
-  contract?.once("MilestoneAdded", (projectId, deadline, amount) => {
-    try {
-    } catch (error) {
-      throw error;
-    }
-  });
+  // contract?.once("MilestoneAdded", (projectId, deadline, amount) => {
+  //   try {
+  //     addMilestoneToProject(collection,
+  //       gigOrderId,
+  //       projectId,
+  //       milestoneData)
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // });
   useEffect(() => {
     if (isAuthenticated) {
       web3ModalRef.current = new Web3Modal({

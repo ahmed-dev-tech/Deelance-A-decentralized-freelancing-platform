@@ -14,18 +14,34 @@ import { useEffect } from "react";
 import AddMilestone from "../../../../components/molecules/AddMilestone";
 import Navbar from "../../../../components/molecules/Navbar";
 import { ContractContext } from "../../../../context/ContractProvider";
+import { FirebaseContext } from "../../../../context/FirebaseProvider";
 
 function ProjectPage(props) {
   const router = useRouter();
   const { projectId } = router.query;
 
   const { address, getProjectDetailsOnChain } = useContext(ContractContext);
+  const { getProjectDetails } = useContext(FirebaseContext);
 
   const [projectDetails, setProjectDetails] = useState({});
+  const prepareProjectDetails = async () => {
+    try {
+      const chainDetails = await getProjectDetailsOnChain(projectId[0]);
+      const firebaseDetails = await getProjectDetails(
+        projectId[1],
+        projectId[2],
+        projectId[0]
+      );
+      setProjectDetails({ ...chainDetails, ...firebaseDetails });
+    } catch (error) {
+      throw error;
+    }
+  };
   useEffect(() => {
-    projectId &&
-      getProjectDetailsOnChain(projectId).then((res) => setProjectDetails(res));
+    console.log(projectId);
+    projectId && prepareProjectDetails();
   }, [projectId, address]);
+  console.log(projectDetails);
   return (
     <>
       <Navbar />
@@ -44,7 +60,11 @@ function ProjectPage(props) {
               </Stack>
             </Box>
             <Box pos="fixed" bottom="10" right="10">
-              <AddMilestone projectId={projectId} />
+              <AddMilestone
+                projectId={projectId[0]}
+                collection={projectId[1]}
+                gigOrderId={projectId[2]}
+              />
             </Box>
           </Flex>
         ) : (

@@ -340,10 +340,10 @@ function FirebaseProvider({ children }) {
       throw error;
     }
   };
-  const getAllProjects = async (collection, gigOrderId, lim = 10) => {
+  const getAllProjects = async (collectionName, gigOrderId, lim = 10) => {
     try {
       const docRef = query(
-        collection(db, collection, gigOrderId, "projects"),
+        collection(db, collectionName, gigOrderId, "projects"),
         orderBy("projectId"),
         limit(lim)
       );
@@ -431,6 +431,8 @@ function FirebaseProvider({ children }) {
     getMoreGigs,
     addNewProject,
     addMilestoneToProject,
+    getAllProjects,
+    getProjectDetails,
   };
 
   useEffect(() => {

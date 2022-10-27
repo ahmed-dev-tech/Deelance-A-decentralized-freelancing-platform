@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x55a036088fDA9CB4C784783b081C89e1F40De66D",
-    "txHash": "0xbe11b6b9ea35cf44e2b1f1f521ced54c07145b5ec09afba5a2bfbc378df6f558"
+    "txHash": "0xf09a3d89fbacd48c2a19db50993fd2dd5614479891f549248629896e9f734e9d"
   },
   "proxies": [
     {
@@ -67,14 +67,14 @@
     },
     {
       "address": "0x54e3a7AB81B3610C529002c24d5eAD542819407C",
-      "txHash": "0xdbab18bfa47147cfa68973760ee64c8e302645c1939a32f3ec35cdd0723db846",
+      "txHash": "0x5e3cf6ca44db3ae72419ff9a78cb12005ba0e3b083a1e8c5f1c9d1526338d114",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "7762672633aa9c75ceb58b21221949fe8a86ed212d1dd06cd751b2f8230b14ed": {
+    "02f21de3954856e8ced23891e8fd3f9e6f434cac97782dbb9bb2c60fe6f44c05": {
       "address": "0x1AAA839cB044f9E4e5118E15c132fF3E4736E810",
-      "txHash": "0x6894c4dcc6bab4f61f8fc703af9c49f59c94b11a927a63e9a81923a8992d29b3",
+      "txHash": "0x1b7f0aef8a1840f82eb1c65e00df6fb3ed7232f011a660f9307afc1be0d45b0d",
       "layout": {
         "solcVersion": "0.8.9",
         "storage": [
@@ -90,7 +90,7 @@
             "label": "users",
             "offset": 0,
             "slot": "1",
-            "type": "t_mapping(t_address,t_struct(User)575_storage)",
+            "type": "t_mapping(t_address,t_struct(User)581_storage)",
             "contract": "Vault",
             "src": "contracts\\Vault.sol:16"
           },
@@ -122,7 +122,7 @@
             "label": "projects",
             "offset": 0,
             "slot": "4",
-            "type": "t_mapping(t_uint256,t_struct(Project)135_storage)",
+            "type": "t_mapping(t_uint256,t_struct(Project)137_storage)",
             "contract": "Deelance",
             "src": "contracts\\Deelance.sol:26"
           }
@@ -136,7 +136,7 @@
             "label": "address payable",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(Milestone)118_storage)dyn_storage": {
+          "t_array(t_struct(Milestone)120_storage)dyn_storage": {
             "label": "struct Deelance.Milestone[]",
             "numberOfBytes": "32"
           },
@@ -144,7 +144,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(User)575_storage)": {
+          "t_mapping(t_address,t_struct(User)581_storage)": {
             "label": "mapping(address => struct Vault.User)",
             "numberOfBytes": "32"
           },
@@ -152,11 +152,11 @@
             "label": "mapping(address => uint256)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(Project)135_storage)": {
+          "t_mapping(t_uint256,t_struct(Project)137_storage)": {
             "label": "mapping(uint256 => struct Deelance.Project)",
             "numberOfBytes": "32"
           },
-          "t_struct(Milestone)118_storage": {
+          "t_struct(Milestone)120_storage": {
             "label": "struct Deelance.Milestone",
             "members": [
               {
@@ -192,7 +192,7 @@
             ],
             "numberOfBytes": "96"
           },
-          "t_struct(Project)135_storage": {
+          "t_struct(Project)137_storage": {
             "label": "struct Deelance.Project",
             "members": [
               {
@@ -215,7 +215,7 @@
               },
               {
                 "label": "milestones",
-                "type": "t_array(t_struct(Milestone)118_storage)dyn_storage",
+                "type": "t_array(t_struct(Milestone)120_storage)dyn_storage",
                 "offset": 0,
                 "slot": "3"
               },
@@ -240,7 +240,7 @@
             ],
             "numberOfBytes": "160"
           },
-          "t_struct(User)575_storage": {
+          "t_struct(User)581_storage": {
             "label": "struct Vault.User",
             "members": [
               {

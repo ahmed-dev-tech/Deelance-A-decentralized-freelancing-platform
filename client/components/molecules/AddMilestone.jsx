@@ -20,25 +20,48 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useContext, useState } from "react";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
 import { ContractContext } from "../../context/ContractProvider";
+import { FirebaseContext } from "../../context/FirebaseProvider";
 
-function AddMilestone({ projectId }) {
+function AddMilestone({ projectId, collection, gigOrderId }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const { mumbaiTokens } = useContext(UtilitiesContext);
   const { address, addMilestone } = useContext(ContractContext);
+  const { addMilestoneToProject } = useContext(FirebaseContext);
+
+  const [milestoneBio, setMilestoneBio] = useState({
+    topic: "",
+    description: "",
+  });
   const [startDate, setStartDate] = useState(new Date());
   const [milestoneBudget, setMilestoneBudget] = useState({
     value: 0,
     token: "native",
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   const submitMilestone = async () => {
-    await addMilestone(
-      projectId,
-      Date.parse(startDate),
-      milestoneBudget.token != "native",
-      milestoneBudget.token == "native" ? address : milestoneBudget.token,
-      Number(milestoneBudget.value)
-    );
+    setIsSaving(true);
+    try {
+      await addMilestone(
+        projectId,
+        Date.parse(startDate),
+        milestoneBudget.token != "native",
+        milestoneBudget.token == "native" ? address : milestoneBudget.token,
+        milestoneBudget.token == "native"
+          ? milestoneBudget.value
+          : Number(milestoneBudget.value)
+      );
+      await addMilestoneToProject(
+        collection,
+        gigOrderId,
+        projectId,
+        milestoneBio
+      );
+    } catch (error) {
+      throw error;
+    }
+    setIsSaving(false);
   };
   return (
     <>
@@ -60,11 +83,28 @@ function AddMilestone({ projectId }) {
           <ModalBody>
             <FormControl>
               <FormLabel>What's the topic</FormLabel>
-              <Input borderTop={"none"} borderRight={"none"} />
+              <Input
+                value={milestoneBio.topic}
+                onChange={(e) =>
+                  setMilestoneBio({ ...milestoneBio, topic: e.target.value })
+                }
+                borderTop={"none"}
+                borderRight={"none"}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Describe the milestone</FormLabel>
-              <Textarea borderTop={"none"} borderRight={"none"} />
+              <Textarea
+                value={milestoneBio.description}
+                onChange={(e) =>
+                  setMilestoneBio({
+                    ...milestoneBio,
+                    description: e.target.value,
+                  })
+                }
+                borderTop={"none"}
+                borderRight={"none"}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Pick a deadline</FormLabel>
@@ -110,7 +150,12 @@ function AddMilestone({ projectId }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={submitMilestone}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={submitMilestone}
+              isLoading={isSaving}
+            >
               ADD
             </Button>
             <Button colorScheme="red" mr={3} onClick={onClose}>
