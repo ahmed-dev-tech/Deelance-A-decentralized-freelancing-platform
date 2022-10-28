@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Checkbox,
   Flex,
   Progress,
@@ -12,11 +11,11 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
-import AddMilestone from "../../../../components/molecules/AddMilestone";
-import CompleteMilestone from "../../../../components/molecules/CompleteMilestone";
-import Navbar from "../../../../components/molecules/Navbar";
-import { ContractContext } from "../../../../context/ContractProvider";
-import { FirebaseContext } from "../../../../context/FirebaseProvider";
+import AddMilestone from "../../components/molecules/AddMilestone";
+import CompleteMilestone from "../../components/molecules/CompleteMilestone";
+import Navbar from "../../components/molecules/Navbar";
+import { ContractContext } from "../../context/ContractProvider";
+import { FirebaseContext } from "../../context/FirebaseProvider";
 
 function ProjectPage(props) {
   const router = useRouter();

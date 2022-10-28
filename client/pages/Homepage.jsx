@@ -9,9 +9,9 @@ import {
   Button,
   Image,
 } from "@chakra-ui/react";
-import TutorialModal from "../../components/molecules/TutorialModal";
-import Navbar from "../../components/molecules/Navbar";
-import HeadingText from "../../components/atoms/HeadingText";
+import TutorialModal from "../components/molecules/TutorialModal";
+import Navbar from "../components/molecules/Navbar";
+import HeadingText from "../components/atoms/HeadingText";
 
 function Homepage() {
   return (

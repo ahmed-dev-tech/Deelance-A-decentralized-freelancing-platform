@@ -16,16 +16,16 @@ import {
   Textarea,
   HStack,
 } from "@chakra-ui/react";
-import Navbar from "../../../../components/molecules/Navbar";
-import Footer from "../../../../components/molecules/Footer";
-import { FirebaseContext } from "../../../../context/FirebaseProvider";
+import Navbar from "../../components/molecules/Navbar";
+import Footer from "../../components/molecules/Footer";
+import { FirebaseContext } from "../../context/FirebaseProvider";
 import axios from "axios";
-import { UtilitiesContext } from "../../../../context/UtilitiesProvider";
-import { ContractContext } from "../../../../context/ContractProvider";
-import ImagePicker from "../../../../components/atoms/imagePicker";
+import { UtilitiesContext } from "../../context/UtilitiesProvider";
+import { ContractContext } from "../../context/ContractProvider";
+import ImagePicker from "../../components/atoms/imagePicker";
 import { useRef } from "react";
-import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
-import HeadingText from "../../../../components/atoms/HeadingText";
+import { NFTStorageContext } from "../../context/NFTStorageProvider";
+import HeadingText from "../../components/atoms/HeadingText";
 
 function OrderPage() {
   const router = useRouter();
@@ -285,7 +285,7 @@ function OrderPage() {
                     {clientInfo.bio && shortenText(clientInfo.bio, 25)}
                   </Text>
                 </Stack>
-                <Link href={"/screens/App"}>
+                <Link href={"/App"}>
                   <Button
                     colorScheme={"teal"}
                     rounded={"full"}

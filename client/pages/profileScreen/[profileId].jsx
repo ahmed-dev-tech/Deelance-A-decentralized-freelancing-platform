@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { FirebaseContext } from "../../../../context/FirebaseProvider";
+import { FirebaseContext } from "../../context/FirebaseProvider";
 import {
   Avatar,
   Box,
@@ -13,11 +13,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import Navbar from "../../../../components/molecules/Navbar";
-import Rating from "../../../../components/atoms/Rating";
-import GigCard from "../../../../components/atoms/GigCard";
-import { ContractContext } from "../../../../context/ContractProvider";
-import EditProfile from "../../../../components/molecules/EditProfile";
+import Navbar from "../../components/molecules/Navbar";
+import Rating from "../../components/atoms/Rating";
+import GigCard from "../../components/atoms/GigCard";
+import { ContractContext } from "../../context/ContractProvider";
+import EditProfile from "../../components/molecules/EditProfile";
 
 function ProfilePage(props) {
   const router = useRouter();

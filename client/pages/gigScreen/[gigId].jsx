@@ -16,15 +16,15 @@ import {
   Textarea,
   HStack,
 } from "@chakra-ui/react";
-import Navbar from "../../../../components/molecules/Navbar";
-import { FirebaseContext } from "../../../../context/FirebaseProvider";
+import Navbar from "../../components/molecules/Navbar";
+import { FirebaseContext } from "../../context/FirebaseProvider";
 import axios from "axios";
-import { UtilitiesContext } from "../../../../context/UtilitiesProvider";
-import { ContractContext } from "../../../../context/ContractProvider";
-import ImagePicker from "../../../../components/atoms/imagePicker";
+import { UtilitiesContext } from "../../context/UtilitiesProvider";
+import { ContractContext } from "../../context/ContractProvider";
+import ImagePicker from "../../components/atoms/imagePicker";
 import { useRef } from "react";
-import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
-import HeadingText from "../../../../components/atoms/HeadingText";
+import { NFTStorageContext } from "../../context/NFTStorageProvider";
+import HeadingText from "../../components/atoms/HeadingText";
 
 function GigPage() {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Navbar from "../../components/molecules/Navbar";
+import Navbar from "../components/molecules/Navbar";
 import {
   FormControl,
   FormLabel,
@@ -7,7 +7,7 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
-import { FirebaseContext } from "../../context/FirebaseProvider";
+import { FirebaseContext } from "../context/FirebaseProvider";
 
 function Admin(props) {
   const { addCategory } = useContext(FirebaseContext);

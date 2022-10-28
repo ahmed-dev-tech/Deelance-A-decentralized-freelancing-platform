@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Footer from "../components/molecules/Footer";
-import Homepage from "./screens/Homepage";
+import Homepage from "./Homepage";
 
 export default function Home() {
   return (
