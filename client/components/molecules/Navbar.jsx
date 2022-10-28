@@ -115,13 +115,16 @@ function Navbar(props) {
                   </Center>
                   <br />
                   <MenuDivider />
+                  <MenuItem>Your Gigs</MenuItem>
+                  <MenuItem>Your Orders</MenuItem>
+                  <MenuDivider />
                   {isFreelancer ? (
                     <MenuItem>
-                      <Link href={"/screens/App"}>Be a Client</Link>
+                      <Link href={"/screens/App"}>Client View</Link>
                     </MenuItem>
                   ) : (
                     <MenuItem>
-                      <Link href={"/screens/Freelancer"}>Be a Freelancer</Link>
+                      <Link href={"/screens/Freelancer"}>Freelancer View</Link>
                     </MenuItem>
                   )}
                   <MenuItem>{`Funds=${ethers.utils.formatEther(
@@ -132,6 +135,7 @@ function Navbar(props) {
                     fundInVault.stableCoins.usdt
                   }`}</MenuItem>
                   <MenuItem>Account Settings</MenuItem>
+                  <MenuDivider />
                   <MenuItem>Logout</MenuItem>
                   {address == "0x741dfbfa5843311fed71f65967cf2e766b9c33bd" && (
                     <MenuItem>

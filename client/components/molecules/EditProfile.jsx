@@ -55,12 +55,7 @@ function EditProfile({ props }) {
     setDisplayImage(props.profileDetails.image);
   }, [props.profileDetails]);
   return (
-    <Flex
-      minH={"100vh"}
-      align={"left"}
-      justify={"left"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
+    <Flex w={{ base: "100%", md: "50%" }} align={"left"} justify={"left"}>
       <Stack
         spacing={4}
         w={"full"}
