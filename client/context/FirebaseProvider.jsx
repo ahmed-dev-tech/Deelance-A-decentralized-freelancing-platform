@@ -16,6 +16,7 @@ import {
   deleteDoc,
   arrayUnion,
   startAfter,
+  arrayRemove,
 } from "firebase/firestore";
 import { UtilitiesContext } from "./UtilitiesProvider";
 
@@ -78,7 +79,8 @@ function FirebaseProvider({ children }) {
     address,
     price,
     rating = 0,
-    orderArray = []
+    biddersArray = [],
+    approvedClients = []
   ) => {
     try {
       const docRef = await addDoc(collection(db, "gigs"), {
@@ -87,7 +89,8 @@ function FirebaseProvider({ children }) {
         address,
         price,
         rating,
-        orderArray,
+        biddersArray,
+        approvedClients,
         timestamp: Date.now(),
       });
       makeToast(
@@ -368,12 +371,12 @@ function FirebaseProvider({ children }) {
   };
   const addToFirebaseArray = async (
     collection,
-    orderId,
+    gig_OrderId,
     arrayField,
     parameter
   ) => {
     try {
-      const docRef = doc(db, collection, orderId);
+      const docRef = doc(db, collection, gig_OrderId);
       await updateDoc(docRef, {
         [arrayField]: arrayUnion(parameter),
       });
@@ -389,6 +392,17 @@ function FirebaseProvider({ children }) {
         `Error adding to ${arrayField} array`,
         "error"
       );
+    }
+  };
+  const approveClient = async (gigId, clientAddress) => {
+    try {
+      const docRef = doc(db, "gigs", gigId);
+      await addToFirebaseArray("gigs", gigId, "approvedClients", clientAddress);
+      await updateDoc(docRef, {
+        biddersArray: arrayRemove(clientAddress),
+      });
+    } catch (error) {
+      throw error;
     }
   };
   const getMoreGigs = async (lastVisible) => {
@@ -433,6 +447,7 @@ function FirebaseProvider({ children }) {
     addMilestoneToProject,
     getAllProjects,
     getProjectDetails,
+    approveClient,
   };
 
   useEffect(() => {

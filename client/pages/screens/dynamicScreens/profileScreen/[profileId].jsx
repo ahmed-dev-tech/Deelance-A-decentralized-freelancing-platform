@@ -24,6 +24,7 @@ import Rating from "../../../../components/atoms/Rating";
 import GigCard from "../../../../components/atoms/GigCard";
 import { ContractContext } from "../../../../context/ContractProvider";
 import HeadingText from "../../../../components/atoms/HeadingText";
+import EditProfile from "../../../../components/molecules/EditProfile";
 
 function ProfilePage(props) {
   const router = useRouter();
@@ -46,13 +47,7 @@ function ProfilePage(props) {
   const [isAltered, setIsAltered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [gigs, setGigs] = useState([]);
-  const inputFile = useRef(null);
 
-  const fetchFile = (e) => {
-    e.preventDefault();
-    setPic(e.target.files[0]);
-    setIsAltered(true);
-  };
   const saveProfile = async () => {
     try {
       setIsSaving(true);
@@ -83,6 +78,11 @@ function ProfilePage(props) {
       setProfileDetails({});
     }
   };
+  const data = {
+    address,
+    profileId,
+    profileDetails,
+  };
   useEffect(() => {
     if (profileId) {
       prepareUserProfile();
@@ -91,49 +91,46 @@ function ProfilePage(props) {
       });
     }
   }, [profileId, contract]);
-  console.log(userDetailsOnChain);
+
   return (
     <Box>
       <Navbar />
-      <Box p={10}>
-        <HeadingText>
-          {address == profileId ? "Edit Profile" : "Profile"}
-        </HeadingText>
-
+      <Box>
         {address == profileId ? (
-          <Box width={"lg"} p={"5"} mx={"auto"}>
-            <ImagePicker image={profileDetails.image} inputFile={inputFile} />
-            <FormControl isRequired>
-              <FormLabel>Name</FormLabel>
-              <Input
-                value={name}
-                onChange={(e) => {
-                  setIsAltered(true);
-                  setName(e.target.value);
-                }}
-                placeholder={profileDetails.name}
-              />
-            </FormControl>
-            <FormControl isRequired>
-              <FormLabel>Bio</FormLabel>
-              <Textarea
-                value={bio}
-                onChange={(e) => {
-                  setIsAltered(true);
-                  setBio(e.target.value);
-                }}
-                placeholder={profileDetails.bio}
-              />
-            </FormControl>
-            <FormControl isRequired>
-              <Input
-                onChange={(e) => fetchFile(e)}
-                ref={inputFile}
-                type={"file"}
-                style={{ display: "none" }}
-              />
-            </FormControl>
-          </Box>
+          // <Box width={"lg"} p={"5"} mx={"auto"}>
+          //   <ImagePicker image={profileDetails.image} inputFile={inputFile} />
+          //   <FormControl isRequired>
+          //     <FormLabel>Name</FormLabel>
+          //     <Input
+          //       value={name}
+          //       onChange={(e) => {
+          //         setIsAltered(true);
+          //         setName(e.target.value);
+          //       }}
+          //       placeholder={profileDetails.name}
+          //     />
+          //   </FormControl>
+          //   <FormControl isRequired>
+          //     <FormLabel>Bio</FormLabel>
+          //     <Textarea
+          //       value={bio}
+          //       onChange={(e) => {
+          //         setIsAltered(true);
+          //         setBio(e.target.value);
+          //       }}
+          //       placeholder={profileDetails.bio}
+          //     />
+          //   </FormControl>
+          //   <FormControl isRequired>
+          //     <Input
+          //       onChange={(e) => fetchFile(e)}
+          //       ref={inputFile}
+          //       type={"file"}
+          //       style={{ display: "none" }}
+          //     />
+          //   </FormControl>
+          // </Box>
+          <EditProfile props={data} />
         ) : (
           <Stack
             align={"center"}

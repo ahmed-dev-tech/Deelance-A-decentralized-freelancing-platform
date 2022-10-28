@@ -30,8 +30,14 @@ function GigPage() {
   const router = useRouter();
   const { gigId } = router.query;
 
-  const { fetchGigDetails, getUserProfile, updateGig, deleteGig } =
-    useContext(FirebaseContext);
+  const {
+    fetchGigDetails,
+    getUserProfile,
+    updateGig,
+    deleteGig,
+    approveClient,
+    addToFirebaseArray,
+  } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
   const { address } = useContext(ContractContext);
@@ -51,6 +57,9 @@ function GigPage() {
     e.preventDefault();
     setGigPic(e.target.files[0]);
     setIsAltered(true);
+  };
+  const showInterest = async () => {
+    await addToFirebaseArray("gigs", gigId, "biddersArray", address);
   };
   const saveGig = async () => {
     try {
@@ -195,7 +204,35 @@ function GigPage() {
         </Stack>
         <HeadingText>All Bidders</HeadingText>
 
-        <Stack p={3} maxW={"lg"}></Stack>
+        <Stack p={3} maxW={"lg"}>
+          {gigDetails?.biddersArray?.map((_, i) => {
+            return address == gigDetails.address ? (
+              <Flex justifyContent={"space-between"} key={i}>
+                <Link
+                  href={`/screens/dynamicScreens/profileScreen/${_}`}
+                  key={i}
+                >
+                  <Button>{_}</Button>
+                </Link>
+                <Button
+                  onClick={() => {
+                    approveClient(gigId, _);
+                  }}
+                >
+                  Approve
+                </Button>
+              </Flex>
+            ) : _ == address ? (
+              <Link href={`/screens/dynamicScreens/profileScreen/${_}`} key={i}>
+                <Button>You</Button>
+              </Link>
+            ) : (
+              <Link href={`/screens/dynamicScreens/profileScreen/${_}`} key={i}>
+                <Button>{_}</Button>
+              </Link>
+            );
+          })}
+        </Stack>
         <HeadingText>Projects</HeadingText>
         <HStack></HStack>
         {gigDetails.address == address ? (
@@ -232,28 +269,27 @@ function GigPage() {
                     {sellerInfo.bio && shortenText(sellerInfo.bio, 25)}
                   </Text>
                 </Stack>
-                <Link href={"/screens/App"}>
-                  <Button
-                    colorScheme={"teal"}
-                    rounded={"full"}
-                    size={"md"}
-                    fontWeight={"normal"}
-                    px={6}
-                  >
-                    Contact Seller
-                  </Button>
-                </Link>
-                <Link href={"/screens/App"}>
-                  <Button
-                    colorScheme={"blue"}
-                    rounded={"full"}
-                    size={"md"}
-                    fontWeight={"normal"}
-                    px={6}
-                  >
-                    Order Seller
-                  </Button>
-                </Link>
+
+                <Button
+                  colorScheme={"teal"}
+                  rounded={"full"}
+                  size={"md"}
+                  fontWeight={"normal"}
+                  px={6}
+                >
+                  Contact Seller
+                </Button>
+
+                <Button
+                  colorScheme={"blue"}
+                  rounded={"full"}
+                  size={"md"}
+                  onClick={showInterest}
+                  fontWeight={"normal"}
+                  px={6}
+                >
+                  Show Interest
+                </Button>
               </Stack>
             </Stack>
           </Box>
