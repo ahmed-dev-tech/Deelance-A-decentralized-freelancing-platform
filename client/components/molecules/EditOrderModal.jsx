@@ -14,7 +14,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import Select from "react-select";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContractContext } from "../../context/ContractProvider";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import { NFTStorageContext } from "../../context/NFTStorageProvider";
@@ -68,6 +68,9 @@ function EditGigModal({ children, isOpen, onClose }) {
     setIsSavingOrder(false);
   };
   // JSX Elements
+  useEffect(() => {
+    setOrderCategory(categories[0]);
+  }, [categories]);
   return (
     <>
       {children}

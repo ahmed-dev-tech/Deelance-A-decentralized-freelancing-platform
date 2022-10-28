@@ -14,7 +14,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import Select from "react-select";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContractContext } from "../../context/ContractProvider";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import { NFTStorageContext } from "../../context/NFTStorageProvider";
@@ -57,8 +57,17 @@ function EditGigModal({ children, isOpen, onClose }) {
     e.preventDefault();
     setIsSavingGig(true);
     try {
-      if (!(gigCID && gigCategory && address && gigPrice))
-        return "All parameters are required";
+      if (!(gigCID && gigCategory && address && gigPrice)) {
+        console.log(
+          "All parameters are required",
+          gigCID,
+          gigCategory,
+          address,
+          gigPrice
+        );
+        setIsSavingGig(false);
+        return;
+      }
       await createGig(gigCID, gigCategory, address, gigPrice);
     } catch (error) {
       throw error;
@@ -66,6 +75,9 @@ function EditGigModal({ children, isOpen, onClose }) {
     setIsSavingGig(false);
   };
   // JSX Elements
+  useEffect(() => {
+    setGigCategory(categories[0]);
+  }, [categories]);
   return (
     <>
       {children}

@@ -24,6 +24,7 @@ import { ContractContext } from "../../../../context/ContractProvider";
 import ImagePicker from "../../../../components/atoms/imagePicker";
 import { useRef } from "react";
 import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
+import HeadingText from "../../../../components/atoms/HeadingText";
 
 function GigPage() {
   const router = useRouter();
@@ -106,6 +107,7 @@ function GigPage() {
     <>
       <Navbar />
       <Container maxW={"7xl"}>
+        <HeadingText>Edit Gig</HeadingText>
         <Stack
           align={"center"}
           spacing={{ base: 8, md: 10 }}
@@ -191,6 +193,11 @@ function GigPage() {
             )}
           </Flex>
         </Stack>
+        <HeadingText>All Bidders</HeadingText>
+
+        <Stack p={3} maxW={"lg"}></Stack>
+        <HeadingText>Projects</HeadingText>
+        <HStack></HStack>
         {gigDetails.address == address ? (
           <HStack pos="fixed" bottom="10" right="10">
             <Button
