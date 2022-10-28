@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   Flex,
   Box,
-  Image,
   useColorModeValue,
   Tooltip,
   Button,
@@ -19,14 +18,12 @@ import { FiExternalLink } from "react-icons/fi";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
-import Rating from "./Rating";
 
 function OrderCard({ content }) {
   const { shortenAddress, shortenText } = useContext(UtilitiesContext);
 
   const [orderName, setOrderName] = useState("");
   const [orderDescription, setOrderDescription] = useState("");
-  const [orderImage, setOrderImage] = useState("");
   const fetchMetaData = async () => {
     let res = await axios.get(
       `https://${content.ipfsHash}.ipfs.nftstorage.link/metadata.json`
@@ -35,7 +32,6 @@ function OrderCard({ content }) {
     setOrderDescription(res.data.description);
     const [cid, fileName] = res.data.image.slice(7).split("/");
     console.log(cid, fileName);
-    setOrderImage(`https://${cid}.ipfs.nftstorage.link/${fileName}`);
   };
   useEffect(() => {
     fetchMetaData();

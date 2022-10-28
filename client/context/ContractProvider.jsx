@@ -11,16 +11,14 @@ import { useContext } from "react";
 import { UtilitiesContext } from "./UtilitiesProvider";
 import { FirebaseContext } from "./FirebaseProvider";
 
-const IERC20_SOURCE = "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20";
-
 export const ContractContext = createContext();
 
 function ContractProvider({ children }) {
-  const { authenticate, isAuthenticated, isWeb3Enabled } = useMoralis();
+  const { isAuthenticated } = useMoralis();
   const web3ModalRef = useRef();
 
   const { makeToast } = useContext(UtilitiesContext);
-  const { addNewProject, addMilestoneToProject } = useContext(FirebaseContext);
+  const { addNewProject } = useContext(FirebaseContext);
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState(null);

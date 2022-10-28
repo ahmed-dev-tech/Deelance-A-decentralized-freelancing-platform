@@ -1,8 +1,7 @@
-import { Stack, HStack, VStack, Box, Heading, Text } from "@chakra-ui/react";
+import { HStack, Box, Heading, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import GigCard from "../atoms/GigCard";
-import InfiniteScroll from "react-infinite-scroller";
 
 const ClientTabContent = (props) => {
   const { getGigs, getMoreGigs } = useContext(FirebaseContext);

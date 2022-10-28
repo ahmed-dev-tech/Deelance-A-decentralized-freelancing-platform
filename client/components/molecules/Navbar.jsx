@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ReactNode, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useMoralis } from "react-moralis";
 import {
   Box,
@@ -29,8 +29,7 @@ import { ethers } from "ethers";
 
 function Navbar(props) {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { authenticate, isAuthenticated, isWeb3Enabled } = useMoralis();
+  const { authenticate, isAuthenticated } = useMoralis();
   const { address, contract, getVaultBalance } = useContext(ContractContext);
   const { shortenAddress, isFreelancer } = useContext(UtilitiesContext);
 

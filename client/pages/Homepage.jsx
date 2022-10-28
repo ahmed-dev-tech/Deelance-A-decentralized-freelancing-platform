@@ -8,11 +8,6 @@ import {
   Text,
   Button,
   Image,
-  Icon,
-  IconButton,
-  createIcon,
-  IconProps,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import TutorialModal from "../../components/molecules/TutorialModal";
 import Navbar from "../../components/molecules/Navbar";

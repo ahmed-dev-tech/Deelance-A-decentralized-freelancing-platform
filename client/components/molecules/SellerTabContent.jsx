@@ -1,7 +1,6 @@
-import { Stack, HStack, VStack, Box, Heading, Text } from "@chakra-ui/react";
+import { Stack, Box, Heading, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { FirebaseContext } from "../../context/FirebaseProvider";
-import GigCard from "../atoms/GigCard";
 import OrderCard from "../atoms/OrderCard";
 
 const SellerTabContent = (props) => {

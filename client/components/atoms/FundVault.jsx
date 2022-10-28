@@ -14,7 +14,6 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import Select from "react-select";
-import { ethers } from "ethers";
 import { useContext } from "react";
 import { useState } from "react";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
@@ -23,7 +22,6 @@ import { ContractContext } from "../../context/ContractProvider";
 function FundVault() {
   const { fundVault } = useContext(ContractContext);
   const { mumbaiTokens } = useContext(UtilitiesContext);
-  const [ethValue, setEthValue] = useState(0);
   const [amount, setAmount] = useState({ value: null, token: "native" });
   const { isOpen, onOpen, onClose } = useDisclosure();
 

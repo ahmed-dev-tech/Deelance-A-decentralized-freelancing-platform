@@ -48,7 +48,6 @@ function OrderPage() {
   const [orderName, setOrderName] = useState("");
   const [orderDescription, setOrderDescription] = useState("");
   const [orderPic, setOrderPic] = useState({});
-  const [price, setPrice] = useState(0);
   const [isAltered, setIsAltered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

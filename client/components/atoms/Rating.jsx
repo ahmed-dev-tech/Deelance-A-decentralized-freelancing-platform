@@ -1,6 +1,5 @@
 import React from "react";
 import { Box } from "@chakra-ui/react";
-import { BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { StarIcon } from "@chakra-ui/icons";
 
 function Rating({ rating, numReviews }) {
