@@ -50,7 +50,7 @@ function OrderCard({ content }) {
       overflow="hidden"
       position={"relative"}
     >
-      <Link href={`/screens/dynamicScreens/orderScreen/${content.id}`}>
+      <Link href={`/orderScreen/${content.id}`}>
         <IconButton
           aria-label={"Play Button"}
           variant={"ghost"}

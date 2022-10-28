@@ -42,7 +42,7 @@ function GigCard({ content }) {
       overflow="hidden"
       position={"relative"}
     >
-      <Link href={`/screens/dynamicScreens/gigScreen/${content.id}`}>
+      <Link href={`/gigScreen/${content.id}`}>
         <IconButton
           aria-label={"Play Button"}
           variant={"ghost"}

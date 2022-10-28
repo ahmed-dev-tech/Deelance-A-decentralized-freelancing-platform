@@ -54,7 +54,7 @@ function Homepage() {
               direction={{ base: "column", sm: "row" }}
             >
               <TutorialModal />
-              <Link href={"/screens/App"}>
+              <Link href={"/App"}>
                 <Button
                   colorScheme={"blue"}
                   rounded={"full"}

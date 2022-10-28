@@ -17,7 +17,6 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import Navbar from "../../../../components/molecules/Navbar";
-import Footer from "../../../../components/molecules/Footer";
 import { FirebaseContext } from "../../../../context/FirebaseProvider";
 import axios from "axios";
 import { UtilitiesContext } from "../../../../context/UtilitiesProvider";
@@ -27,105 +26,97 @@ import { useRef } from "react";
 import { NFTStorageContext } from "../../../../context/NFTStorageProvider";
 import HeadingText from "../../../../components/atoms/HeadingText";
 
-function OrderPage() {
+function GigPage() {
   const router = useRouter();
-  const { orderId } = router.query;
+  const { gigId } = router.query;
 
   const {
-    fetchOrderDetails,
+    fetchGigDetails,
     getUserProfile,
-    updateOrder,
-    deleteOrder,
+    updateGig,
+    deleteGig,
+    approveClient,
     addToFirebaseArray,
-    getAllProjects,
   } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { shortenText } = useContext(UtilitiesContext);
-  const { address, startProject } = useContext(ContractContext);
+  const { address } = useContext(ContractContext);
 
-  const [orderDetails, setOrderDetails] = useState({});
-  const [clientInfo, setClientInfo] = useState({});
-  const [orderName, setOrderName] = useState("");
-  const [orderDescription, setOrderDescription] = useState("");
-  const [orderPic, setOrderPic] = useState({});
-  const [price, setPrice] = useState(0);
+  const [gigDetails, setGigDetails] = useState({});
+  const [sellerInfo, setSellerInfo] = useState({});
+  const [gigName, setGigName] = useState("");
+  const [gigDescription, setGigDescription] = useState("");
+  const [gigPic, setGigPic] = useState({});
   const [isAltered, setIsAltered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
   const inputFile = useRef(null);
 
   const fetchFile = (e) => {
     e.preventDefault();
-    setOrderPic(e.target.files[0]);
+    setGigPic(e.target.files[0]);
     setIsAltered(true);
   };
-  const saveOrder = async () => {
+  const showInterest = async () => {
+    await addToFirebaseArray("gigs", gigId, "biddersArray", address);
+  };
+  const saveGig = async () => {
     try {
       setIsSaving(true);
       const res = await deployToNFTStorage(
-        orderName || orderDetails.name,
-        orderDescription || orderDetails.description,
-        orderPic
+        gigName || gigDetails.name,
+        gigDescription || gigDetails.description,
+        gigPic
       );
-      await updateOrder(orderId, { ipfsHash: res.ipnft });
+      await updateGig(gigId, { ipfsHash: res.ipnft });
     } catch (error) {
       throw error;
     }
     setIsSaving(false);
     setIsAltered(false);
   };
-  const removeOrder = async () => {
+  const removeGig = async () => {
     setIsDeleting(true);
-    await deleteOrder(orderId);
+    await deleteGig(gigId);
     setIsDeleting(false);
   };
-  const showInterest = async () => {
-    await addToFirebaseArray("orders", orderId, "biddersArray", address);
-  };
-  const orderSeller = async (orderId, address) => {
-    await startProject(`order${orderId}`, address);
-  };
-  const fetchClientInfo = async (address) => {
+  const fetchSellerInfo = async (address) => {
     const res = await getUserProfile(address);
     let ipfsRes = await axios.get(
       `https://${res.ipfsHash}.ipfs.nftstorage.link/metadata.json`
     );
     const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
-    setClientInfo({
+    setSellerInfo({
       name: ipfsRes.data.name,
       bio: ipfsRes.data.description,
       image: `https://${cid}.ipfs.nftstorage.link/${fileName}`,
     });
   };
-  const prepareOrderDetails = async () => {
-    const firebaseRes = await fetchOrderDetails(orderId);
-    console.log(firebaseRes);
+  const prepareGigDetails = async () => {
+    const firebaseRes = await fetchGigDetails(gigId);
     let ipfsRes = await axios.get(
       `https://${firebaseRes.ipfsHash}.ipfs.nftstorage.link/metadata.json`
     );
     const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
-    const projects = await getAllProjects("orders", orderId, 10);
-    setOrderDetails({
+    setGigDetails({
       ...firebaseRes,
-      projectsArray: projects,
       name: ipfsRes.data.name,
       description: ipfsRes.data.description,
       image: `https://${cid}.ipfs.nftstorage.link/${fileName}`,
     });
-    // get all started projects
   };
   useEffect(() => {
-    orderId && prepareOrderDetails();
-  }, [orderId]);
+    gigId && prepareGigDetails();
+  }, [gigId]);
   useEffect(() => {
-    orderDetails.address && fetchClientInfo(orderDetails.address);
-  }, [orderDetails.address]);
+    gigDetails.address && fetchSellerInfo(gigDetails.address);
+  }, [gigDetails.address]);
   return (
     <>
       <Navbar />
       <Container maxW={"7xl"}>
-        <HeadingText>Edit Order</HeadingText>
-
+        <HeadingText>Edit Gig</HeadingText>
         <Stack
           align={"center"}
           spacing={{ base: 8, md: 10 }}
@@ -133,26 +124,26 @@ function OrderPage() {
           direction={{ base: "column", md: "row" }}
         >
           <Stack flex={1} spacing={{ base: 5, md: 10 }}>
-            {orderDetails.address == address ? (
+            {gigDetails.address == address ? (
               <>
                 <FormControl>
                   <Input
-                    value={orderName}
+                    value={gigName}
                     onChange={(e) => {
                       setIsAltered(true);
-                      setOrderName(e.target.value);
+                      setGigName(e.target.value);
                     }}
-                    placeholder={orderDetails.name}
+                    placeholder={gigDetails.name}
                   />
                 </FormControl>
                 <FormControl>
                   <Textarea
-                    value={orderDescription}
+                    value={gigDescription}
                     onChange={(e) => {
                       setIsAltered(true);
-                      setOrderDescription(e.target.value);
+                      setGigDescription(e.target.value);
                     }}
-                    placeholder={orderDetails.description}
+                    placeholder={gigDetails.description}
                   />
                 </FormControl>
               </>
@@ -164,10 +155,10 @@ function OrderPage() {
                   fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
                 >
                   <Text as={"span"} color={"blue.400"}>
-                    {orderDetails.name}
+                    {gigDetails.name}
                   </Text>
                 </Heading>
-                <Text color={"gray.500"}>{orderDetails.description}</Text>
+                <Text color={"gray.500"}>{gigDetails.description}</Text>
               </>
             )}
           </Stack>
@@ -178,7 +169,7 @@ function OrderPage() {
             position={"relative"}
             w={"full"}
           >
-            {orderDetails.address == address ? (
+            {gigDetails.address == address ? (
               <Box width={"lg"}>
                 <FormControl isRequired>
                   <Input
@@ -188,7 +179,7 @@ function OrderPage() {
                     style={{ display: "none" }}
                   />
                 </FormControl>
-                <ImagePicker inputFile={inputFile} image={orderDetails.image} />
+                <ImagePicker inputFile={inputFile} image={gigDetails.image} />
               </Box>
             ) : (
               <Box
@@ -205,7 +196,7 @@ function OrderPage() {
                   align={"center"}
                   w={"100%"}
                   h={"100%"}
-                  src={orderDetails.image}
+                  src={gigDetails.image}
                 />
               </Box>
             )}
@@ -214,57 +205,43 @@ function OrderPage() {
         <HeadingText>All Bidders</HeadingText>
 
         <Stack p={3} maxW={"lg"}>
-          {orderDetails?.biddersArray?.map((_, i) => {
-            return address == orderDetails.address ? (
+          {gigDetails?.biddersArray?.map((_, i) => {
+            return address == gigDetails.address ? (
               <Flex justifyContent={"space-between"} key={i}>
-                <Link
-                  href={`/screens/dynamicScreens/profileScreen/${_}`}
-                  key={i}
-                >
+                <Link href={`/profileScreen/${_}`} key={i}>
                   <Button>{_}</Button>
                 </Link>
                 <Button
                   onClick={() => {
-                    orderSeller(orderId, _);
+                    approveClient(gigId, _);
                   }}
                 >
-                  Order
+                  Approve
                 </Button>
               </Flex>
             ) : _ == address ? (
-              <Link href={`/screens/dynamicScreens/profileScreen/${_}`} key={i}>
+              <Link href={`/profileScreen/${_}`} key={i}>
                 <Button>You</Button>
               </Link>
             ) : (
-              <Link href={`/screens/dynamicScreens/profileScreen/${_}`} key={i}>
+              <Link href={`/profileScreen/${_}`} key={i}>
                 <Button>{_}</Button>
               </Link>
             );
           })}
         </Stack>
         <HeadingText>Projects</HeadingText>
-        <HStack>
-          {orderDetails?.projectsArray?.map((_, i) => {
-            return (
-              <Link
-                href={`/screens/dynamicScreens/projectScreen/${_.projectId}/orders/${orderId}`}
-                key={i}
-              >
-                <Button>{_.projectId}</Button>
-              </Link>
-            );
-          })}
-        </HStack>
-        {orderDetails.address == address ? (
+        <HStack></HStack>
+        {gigDetails.address == address ? (
           <HStack pos="fixed" bottom="10" right="10">
             <Button
               isDisabled={!isAltered}
               isLoading={isSaving}
-              onClick={saveOrder}
+              onClick={saveGig}
             >
               Save
             </Button>
-            <Button isLoading={isDeleting} onClick={removeOrder}>
+            <Button isLoading={isDeleting} onClick={removeGig}>
               Delete
             </Button>
           </HStack>
@@ -281,31 +258,30 @@ function OrderPage() {
             width={"fit-content"}
           >
             <Stack direction={"row"} spacing={4} align={"center"}>
-              <Avatar src={clientInfo.image} alt={"Author"} />
+              <Avatar src={sellerInfo.image} alt={"Author"} />
               <Stack direction={"row"} spacing={3} fontSize={"sm"}>
                 <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-                  <Text fontWeight={600}>{clientInfo.name}</Text>
+                  <Text fontWeight={600}>{sellerInfo.name}</Text>
                   <Text color={"gray.500"}>
-                    {clientInfo.bio && shortenText(clientInfo.bio, 25)}
+                    {sellerInfo.bio && shortenText(sellerInfo.bio, 25)}
                   </Text>
                 </Stack>
-                <Link href={"/screens/App"}>
-                  <Button
-                    colorScheme={"teal"}
-                    rounded={"full"}
-                    size={"md"}
-                    fontWeight={"normal"}
-                    px={6}
-                  >
-                    Contact Client
-                  </Button>
-                </Link>
+
+                <Button
+                  colorScheme={"teal"}
+                  rounded={"full"}
+                  size={"md"}
+                  fontWeight={"normal"}
+                  px={6}
+                >
+                  Contact Seller
+                </Button>
 
                 <Button
                   colorScheme={"blue"}
-                  onClick={showInterest}
                   rounded={"full"}
                   size={"md"}
+                  onClick={showInterest}
                   fontWeight={"normal"}
                   px={6}
                 >
@@ -316,9 +292,8 @@ function OrderPage() {
           </Box>
         )}
       </Container>
-      <Footer />
     </>
   );
 }
 
-export default OrderPage;
+export default GigPage;

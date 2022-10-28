@@ -107,9 +107,7 @@ function Navbar(props) {
                   </Center>
                   <br />
                   <Center>
-                    <Link
-                      href={`/screens/dynamicScreens/profileScreen/${address}`}
-                    >
+                    <Link href={`/profileScreen/${address}`}>
                       View/Edit Profile
                     </Link>
                   </Center>
@@ -120,11 +118,11 @@ function Navbar(props) {
                   <MenuDivider />
                   {isFreelancer ? (
                     <MenuItem>
-                      <Link href={"/screens/App"}>Client View</Link>
+                      <Link href={"/App"}>Client View</Link>
                     </MenuItem>
                   ) : (
                     <MenuItem>
-                      <Link href={"/screens/Freelancer"}>Freelancer View</Link>
+                      <Link href={"/Freelancer"}>Freelancer View</Link>
                     </MenuItem>
                   )}
                   <MenuItem>{`Funds=${ethers.utils.formatEther(
@@ -139,7 +137,7 @@ function Navbar(props) {
                   <MenuItem>Logout</MenuItem>
                   {address == "0x741dfbfa5843311fed71f65967cf2e766b9c33bd" && (
                     <MenuItem>
-                      <Link href={"/screens/Admin"}>Admin Panel</Link>
+                      <Link href={"/Admin"}>Admin Panel</Link>
                     </MenuItem>
                   )}
                 </MenuList>
