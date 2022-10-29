@@ -405,19 +405,36 @@ function FirebaseProvider({ children }) {
       throw error;
     }
   };
-  const getMoreGigs = async (lastVisible) => {
+  const getMoreGigs = async (
+    lastVisible,
+    order = "rating",
+    lim = 10,
+    condition = null
+  ) => {
     try {
-      const docRef = query(
-        collection(db, "gigs"),
-        orderBy("rating"),
-        startAfter(lastVisible),
-        limit(25)
-      );
+      let docRef;
+      if (condition == null) {
+        docRef = query(
+          collection(db, "gigs"),
+          orderBy(order),
+          startAfter(lastVisible),
+          limit(lim)
+        );
+      } else {
+        docRef = query(
+          collection(db, "gigs"),
+          orderBy(order),
+          where(condition[0], condition[1], condition[2]),
+          startAfter(lastVisible),
+          limit(lim)
+        );
+      }
       const docSnap = await getDocs(docRef);
       let res = [];
       docSnap.forEach((doc) => {
         res.push({ ...doc.data(), id: doc.id });
       });
+      console.log("okay now", res);
       return res;
     } catch (error) {
       makeToast("Firebase Error", "Couldn't fetch more gigs", "error");

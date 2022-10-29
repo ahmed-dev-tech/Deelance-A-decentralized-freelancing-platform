@@ -208,7 +208,7 @@ function GigPage() {
           {gigDetails?.biddersArray?.map((_, i) => {
             return address == gigDetails.address ? (
               <Flex justifyContent={"space-between"} key={i}>
-                <Link href={`/profileScreen/${_}`} key={i}>
+                <Link href={`/${_}/ProfileScreen`} key={i}>
                   <Button>{_}</Button>
                 </Link>
                 <Button
@@ -220,11 +220,11 @@ function GigPage() {
                 </Button>
               </Flex>
             ) : _ == address ? (
-              <Link href={`/profileScreen/${_}`} key={i}>
+              <Link href={`/${_}/ProfileScreen`} key={i}>
                 <Button>You</Button>
               </Link>
             ) : (
-              <Link href={`/profileScreen/${_}`} key={i}>
+              <Link href={`/${_}/ProfileScreen`} key={i}>
                 <Button>{_}</Button>
               </Link>
             );

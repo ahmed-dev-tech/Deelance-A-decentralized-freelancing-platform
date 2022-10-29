@@ -34,9 +34,9 @@ function GigCard({ content }) {
   }, []);
   return (
     <Box
-      maxW="sm"
-      minW="xs"
-      h="xs"
+      maxW="xs"
+      maxH="xs"
+      minH="3xs"
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"

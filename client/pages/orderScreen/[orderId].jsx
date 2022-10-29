@@ -216,7 +216,7 @@ function OrderPage() {
           {orderDetails?.biddersArray?.map((_, i) => {
             return address == orderDetails.address ? (
               <Flex justifyContent={"space-between"} key={i}>
-                <Link href={`/profileScreen/${_}`} key={i}>
+                <Link href={`/${_}/ProfileScreen`} key={i}>
                   <Button>{_}</Button>
                 </Link>
                 <Button
@@ -228,11 +228,11 @@ function OrderPage() {
                 </Button>
               </Flex>
             ) : _ == address ? (
-              <Link href={`/profileScreen/${_}`} key={i}>
+              <Link href={`/${_}/ProfileScreen`} key={i}>
                 <Button>You</Button>
               </Link>
             ) : (
-              <Link href={`/profileScreen/${_}`} key={i}>
+              <Link href={`/${_}/ProfileScreen`} key={i}>
                 <Button>{_}</Button>
               </Link>
             );
