@@ -131,15 +131,21 @@ function FirebaseProvider({ children }) {
       const docSnap = await getDocs(docRef);
       let res = [];
       docSnap.forEach((doc) => {
-        res.push({ ...doc.data(), id: doc.id });
+        res.push(doc);
       });
       makeToast(
         "Firebase Success",
         `Successfully retrieved all gigs`,
         "success"
       );
-      return res;
+      return {
+        data: res.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        }),
+        lastVisible: res[res.length - 1],
+      };
     } catch (error) {
+      console.log(error);
       makeToast("Firebase Error", "Error getting gigs", "error");
     }
   };
@@ -186,15 +192,21 @@ function FirebaseProvider({ children }) {
       const docSnap = await getDocs(docRef);
       let res = [];
       docSnap.forEach((doc) => {
-        res.push({ ...doc.data(), id: doc.id });
+        res.push(doc);
       });
       makeToast(
         "Firebase Success",
         `Successfully retrieved all orders`,
         "success"
       );
-      return res;
+      return {
+        data: res.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        }),
+        lastVisible: res[res.length - 1],
+      };
     } catch (error) {
+      console.log(error);
       makeToast("Firebase Error", "Error getting orders", "error");
     }
   };
@@ -412,6 +424,7 @@ function FirebaseProvider({ children }) {
     condition = null
   ) => {
     try {
+      console.log(lastVisible, order, lim, condition);
       let docRef;
       if (condition == null) {
         docRef = query(
@@ -432,12 +445,58 @@ function FirebaseProvider({ children }) {
       const docSnap = await getDocs(docRef);
       let res = [];
       docSnap.forEach((doc) => {
-        res.push({ ...doc.data(), id: doc.id });
+        res.push(doc);
       });
-      console.log("okay now", res);
-      return res;
+      console.log("okay now", res, docSnap);
+      return {
+        data: res.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        }),
+        lastVisible: res[res.length - 1],
+      };
     } catch (error) {
+      console.log(error);
       makeToast("Firebase Error", "Couldn't fetch more gigs", "error");
+    }
+  };
+  const getMoreOrders = async (
+    lastVisible,
+    order = "timestamp",
+    lim = 10,
+    condition = null
+  ) => {
+    try {
+      let docRef;
+      if (condition == null) {
+        docRef = query(
+          collection(db, "orders"),
+          orderBy(order),
+          startAfter(lastVisible),
+          limit(lim)
+        );
+      } else {
+        docRef = query(
+          collection(db, "orders"),
+          orderBy(order),
+          where(condition[0], condition[1], condition[2]),
+          startAfter(lastVisible),
+          limit(lim)
+        );
+      }
+      const docSnap = await getDocs(docRef);
+      let res = [];
+      docSnap.forEach((doc) => {
+        res.push(doc);
+      });
+      return {
+        data: res.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        }),
+        lastVisible: res[res.length - 1],
+      };
+    } catch (error) {
+      console.log(error);
+      makeToast("Firebase Error", "Couldn't fetch more orders", "error");
     }
   };
   const [categories, setCategories] = useState([]);
@@ -460,6 +519,7 @@ function FirebaseProvider({ children }) {
     deleteOrder,
     addToFirebaseArray,
     getMoreGigs,
+    getMoreOrders,
     addNewProject,
     addMilestoneToProject,
     getAllProjects,
