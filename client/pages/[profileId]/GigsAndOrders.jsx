@@ -114,7 +114,6 @@ function Gigs(props) {
     address && fetchInitialData();
     // will get back to this once done with posting gigs as a freelancer
   }, [address]);
-  console.log(10, displayData);
   return (
     <>
       <Navbar />

@@ -5,7 +5,6 @@ import GigCard from "../../components/atoms/GigCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 function GigGrid({ displayData, fetchMoreData, params }) {
-  console.log(params, displayData);
   return (
     <SimpleGrid
       as={InfiniteScroll}

@@ -12,13 +12,19 @@ import {
   Input,
   Textarea,
   Flex,
+  Center,
+  Avatar,
+  AvatarBadge,
+  IconButton,
+  Stack,
 } from "@chakra-ui/react";
 import Select from "react-select";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ContractContext } from "../../context/ContractProvider";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import { NFTStorageContext } from "../../context/NFTStorageProvider";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
+import { SmallCloseIcon } from "@chakra-ui/icons";
 
 function EditGigModal({ children, isOpen, onClose }) {
   // Context values
@@ -30,42 +36,52 @@ function EditGigModal({ children, isOpen, onClose }) {
   const [orderOffer, setOrderOffer] = useState("");
   const [orderDescription, setOrderDescription] = useState("");
   const [orderFile, setOrderFile] = useState({});
-  const [orderCID, setOrderCID] = useState("");
+  const [displayImage, setDisplayImage] = useState("");
   const [orderCategory, setOrderCategory] = useState("");
   const [orderBudget, setOrderBudget] = useState({ value: 0, token: "native" });
   // Button isLoading values
-  const [isDeployingNFT, setIsDeployingNFT] = useState(false);
   const [isSavingOrder, setIsSavingOrder] = useState(false);
+  // Ref
+  const inputFile = useRef(null);
   // Form Functions
   const fetchFile = (e) => {
     e.preventDefault();
-    setOrderFile(e.target.files[0]);
+    const fileForUpload = e.target.files[0];
+    setOrderFile(fileForUpload);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const readFile = e.target.result;
+      readFile && setDisplayImage(readFile);
+    };
+    reader.readAsDataURL(fileForUpload);
   };
-  const deployAndSetURI = async (e) => {
+  const storeOrder = async (e) => {
     e.preventDefault();
-    setIsDeployingNFT(true);
+    setIsSavingOrder(true);
     try {
       const res = await deployToNFTStorage(
         orderOffer,
         orderDescription,
         orderFile
       );
-      console.log(res);
-      setOrderCID(res.ipnft);
+      await createOrder(res.ipnft, orderCategory, address, orderBudget);
     } catch (error) {
       throw error;
     }
-    setIsDeployingNFT(false);
-  };
-  const storeOrder = async (e) => {
-    e.preventDefault();
-    setIsSavingOrder(true);
-    try {
-      await createOrder(orderCID, orderCategory, address, orderBudget);
-    } catch (error) {
-      throw error;
-    }
+    setOrderOffer("");
+    setOrderDescription("");
+    setOrderFile({});
+    setDisplayImage("");
+    setOrderBudget({ value: 0, token: "native" });
     setIsSavingOrder(false);
+  };
+  const discardChanges = () => {
+    setOrderOffer("");
+    setOrderDescription("");
+    setOrderFile({});
+    setDisplayImage("");
+    setOrderBudget({ value: 0, token: "native" });
+    onClose();
   };
   // JSX Elements
   useEffect(() => {
@@ -74,7 +90,7 @@ function EditGigModal({ children, isOpen, onClose }) {
   return (
     <>
       {children}
-      <Modal onClose={onClose} size={"full"} isOpen={isOpen}>
+      <Modal onClose={onClose} size={"3xl"} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Post Order</ModalHeader>
@@ -96,15 +112,37 @@ function EditGigModal({ children, isOpen, onClose }) {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Add a media file or url</FormLabel>
-              <Input onChange={(e) => fetchFile(e)} height={65} type={"file"} />
+              <Stack direction={["column", "row"]} spacing={6}>
+                <Center>
+                  <Avatar size="xl" src={displayImage || ""}>
+                    <AvatarBadge
+                      as={IconButton}
+                      size="sm"
+                      rounded="full"
+                      top="-10px"
+                      colorScheme="red"
+                      aria-label="remove Image"
+                      onClick={() => {
+                        setDisplayImage("");
+                        setOrderFile({});
+                      }}
+                      icon={<SmallCloseIcon />}
+                    />
+                  </Avatar>
+                </Center>
+                <Center w="full">
+                  <Button w="sm" onClick={() => inputFile.current.click()}>
+                    Pick an image
+                  </Button>
+                  <Input
+                    onChange={(e) => fetchFile(e)}
+                    ref={inputFile}
+                    type={"file"}
+                    style={{ display: "none" }}
+                  />
+                </Center>
+              </Stack>
             </FormControl>
-            <Button
-              mr={3}
-              onClick={(e) => deployAndSetURI(e)}
-              isLoading={isDeployingNFT}
-            >
-              Deploy to NFTStorage
-            </Button>
             <FormControl isRequired>
               <FormLabel>Select Category</FormLabel>
               <Select
@@ -161,7 +199,7 @@ function EditGigModal({ children, isOpen, onClose }) {
             >
               Save
             </Button>
-            <Button colorScheme="red" onClick={onClose}>
+            <Button colorScheme="red" onClick={discardChanges}>
               Discard
             </Button>
           </ModalFooter>

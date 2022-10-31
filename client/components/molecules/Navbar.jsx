@@ -113,10 +113,9 @@ function Navbar(props) {
                   <br />
                   <MenuDivider />
                   <MenuItem>
-                    <Link href={`/${address}/Gigs`}>Your Gigs</Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link href={`/${address}/Orders`}>Your Orders</Link>
+                    <Link href={`/${address}/GigsAndOrders`}>
+                      Your Gigs and Orders
+                    </Link>
                   </MenuItem>
                   <MenuDivider />
                   {isFreelancer ? (
