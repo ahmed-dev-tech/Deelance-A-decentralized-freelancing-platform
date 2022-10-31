@@ -20,6 +20,7 @@ function GigGrid({ displayData, fetchMoreData, params }) {
         minHeight: "30vh",
         overflowX: "hidden",
       }}
+      className="scroll"
       minChildWidth="2xs"
       spacing="40px"
       justifyContent={"center"}
