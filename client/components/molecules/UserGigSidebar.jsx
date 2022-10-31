@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import {
   IconButton,
   Box,
@@ -11,32 +11,20 @@ import {
   DrawerContent,
   Text,
   useDisclosure,
-  BoxProps,
-  FlexProps,
 } from "@chakra-ui/react";
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-} from "react-icons/fi";
-import { IconType } from "react-icons";
-import { ReactText } from "react";
+import { FiMenu } from "react-icons/fi";
 
 const LinkItems = [
-  { name: "Home", icon: FiHome },
-  { name: "Trending", icon: FiTrendingUp },
-  { name: "Explore", icon: FiCompass },
-  { name: "Favourites", icon: FiStar },
-  { name: "Settings", icon: FiSettings },
+  { name: "Owned Gigs", icon: null, linkTo: "ownedGigs" },
+  { name: "Interested Gigs", icon: null, linkTo: "interestedGigs" },
+  { name: "Owned Orders", icon: null, linkTo: "ownedOrders" },
+  { name: "Interested Orders", icon: null, linkTo: "interestedOrders" },
 ];
 
 function UserGigSidebar({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh">
+    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
@@ -75,13 +63,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} linkTo={link.linkTo}>
           {link.name}
         </NavItem>
       ))}
@@ -89,10 +74,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ icon, children, ...rest }) => {
+const NavItem = ({ icon, linkTo, children, ...rest }) => {
   return (
     <Link
-      href="#"
+      href={`#${linkTo}`}
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}
     >

@@ -19,6 +19,7 @@ import { ContractContext } from "../../context/ContractProvider";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import { NFTStorageContext } from "../../context/NFTStorageProvider";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
+import EditProfile from "./EditProfile";
 
 function EditGigModal({ children, isOpen, onClose }) {
   // Context values
@@ -81,7 +82,7 @@ function EditGigModal({ children, isOpen, onClose }) {
   return (
     <>
       {children}
-      <Modal onClose={onClose} size={"full"} isOpen={isOpen}>
+      <Modal onClose={onClose} size={"lg"} isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create Gig</ModalHeader>

@@ -5,6 +5,7 @@ import { ContractContext } from "../../context/ContractProvider";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import UserGigSidebar from "../../components/molecules/UserGigSidebar";
 import GigGrid from "../../components/molecules/GigGrid";
+import OrderGrid from "../../components/molecules/OrderGrid";
 
 function Gigs(props) {
   const { getGigs, getMoreGigs, getOrders, getMoreOrders } =
@@ -14,10 +15,10 @@ function Gigs(props) {
   let gigLimit = 7;
 
   const [displayData, setDisplayData] = useState({
-    ownedGigs: { data: [], lastVisible: null, hasMore: true },
-    interestedGigs: { data: [], lastVisible: null, hasMore: true },
-    ownedOrders: { data: [], lastVisible: null, hasMore: true },
-    interestedOrders: { data: [], lastVisible: null, hasMore: true },
+    ownedGigs: { data: [], lastVisible: null, hasMore: false },
+    interestedGigs: { data: [], lastVisible: null, hasMore: false },
+    ownedOrders: { data: [], lastVisible: null, hasMore: false },
+    interestedOrders: { data: [], lastVisible: null, hasMore: false },
   });
 
   const fetchMoreData = async (dataCategory) => {
@@ -67,71 +68,67 @@ function Gigs(props) {
       },
     });
   };
+  const fetchInitialData = async () => {
+    let res1, res2, res3, res4;
+    try {
+      res1 = await getGigs("rating", gigLimit, ["address", "==", address]);
+      res2 = await getGigs("rating", gigLimit, [
+        "biddersArray",
+        "array-contains",
+        address,
+      ]);
+      res3 = await getOrders("timestamp", gigLimit, ["address", "==", address]);
+      res4 = await getOrders("timestamp", gigLimit, [
+        "biddersArray",
+        "array-contains",
+        address,
+      ]);
+    } catch (error) {
+      throw error;
+    }
+    setDisplayData({
+      ownedGigs: {
+        data: res1.data,
+        lastVisible: res1.lastVisible,
+        hasMore: res1.data.length < gigLimit ? false : true,
+      },
+      interestedGigs: {
+        data: res2.data,
+        lastVisible: res2.lastVisible,
+        hasMore: res2.data.length < gigLimit ? false : true,
+      },
+      ownedOrders: {
+        data: res3.data,
+        lastVisible: res3.lastVisible,
+        hasMore: res3.data.length < gigLimit ? false : true,
+      },
+      interestedOrders: {
+        data: res4.data,
+        lastVisible: res4.lastVisible,
+        hasMore: res4.data.length < gigLimit ? false : true,
+      },
+    });
+  };
   useEffect(() => {
     // Get owned gigs
-    getGigs("rating", gigLimit, ["address", "==", address]).then((res) => {
-      setDisplayData({
-        ...displayData,
-        ownedGigs: {
-          data: [...displayData.ownedGigs.data, ...res?.data],
-          lastVisible: res?.lastVisible,
-          hasMore: res?.data.length < gigLimit ? false : true,
-        },
-      });
-    });
-    //Get interested gigs
-    getGigs("rating", gigLimit, [
-      "biddersArray",
-      "array-contains",
-      address,
-    ]).then((res) => {
-      setDisplayData({
-        ...displayData,
-        ownedGigs: {
-          data: [...displayData.ownedGigs.data, ...res?.data],
-          lastVisible: res?.lastVisible,
-          hasMore: res?.data.length < gigLimit ? false : true,
-        },
-      });
-    });
-    // Get owned orders
-    getOrders("timestamp", gigLimit, ["address", "==", address]).then((res) => {
-      setDisplayData({
-        ...displayData,
-        ownedOrders: {
-          data: [...displayData.ownedOrders.data, ...res?.data],
-          lastVisible: res?.lastVisible,
-          hasMore: res?.data.length < gigLimit ? false : true,
-        },
-      });
-    });
-    //Get interested orders
-    getOrders("timestamp", gigLimit, [
-      "biddersArray",
-      "array-contains",
-      address,
-    ]).then((res) => {
-      setDisplayData({
-        ...displayData,
-        interestedOrders: {
-          data: [...displayData.interestedOrders.data, ...res?.data],
-          lastVisible: res?.lastVisible,
-          hasMore: res?.data.length < gigLimit ? false : true,
-        },
-      });
-    });
+    address && fetchInitialData();
     // will get back to this once done with posting gigs as a freelancer
   }, [address]);
-
+  console.log(10, displayData);
   return (
     <>
       <Navbar />
       <UserGigSidebar>
         <>
-          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          <Heading
+            lineHeight={1.1}
+            fontSize={{ base: "2xl", sm: "3xl" }}
+            id="ownedGigs"
+            p={4}
+          >
             Your owned gigs
           </Heading>
-          <Box>
+          <Box shadow={"sm"} borderRadius={"2xl"}>
             <GigGrid
               displayData={displayData.ownedGigs}
               fetchMoreData={fetchMoreData}
@@ -140,10 +137,15 @@ function Gigs(props) {
           </Box>
         </>
         <>
-          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          <Heading
+            lineHeight={1.1}
+            fontSize={{ base: "2xl", sm: "3xl" }}
+            id="interestedGigs"
+            p={4}
+          >
             Gigs you are interested in
           </Heading>
-          <Box>
+          <Box shadow={"sm"} borderRadius={"2xl"}>
             <GigGrid
               displayData={displayData.interestedGigs}
               fetchMoreData={fetchMoreData}
@@ -152,11 +154,16 @@ function Gigs(props) {
           </Box>
         </>
         <>
-          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          <Heading
+            lineHeight={1.1}
+            fontSize={{ base: "2xl", sm: "3xl" }}
+            id="ownedOrders"
+            p={4}
+          >
             Your Orders
           </Heading>
-          <Box>
-            <GigGrid
+          <Box shadow={"sm"} borderRadius={"2xl"}>
+            <OrderGrid
               displayData={displayData.ownedOrders}
               fetchMoreData={fetchMoreData}
               params={"ownedOrders"}
@@ -164,11 +171,16 @@ function Gigs(props) {
           </Box>
         </>
         <>
-          <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          <Heading
+            lineHeight={1.1}
+            fontSize={{ base: "2xl", sm: "3xl" }}
+            id="interestedOrders"
+            p={4}
+          >
             Orders you are interested in
           </Heading>
-          <Box>
-            <GigGrid
+          <Box shadow={"sm"} borderRadius={"2xl"}>
+            <OrderGrid
               displayData={displayData.interestedOrders}
               fetchMoreData={fetchMoreData}
               params={"interestedOrders"}

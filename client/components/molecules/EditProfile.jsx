@@ -43,7 +43,11 @@ function EditProfile({ props }) {
   const saveProfile = async () => {
     try {
       setIsSaving(true);
-      const res = await deployToNFTStorage(name, bio, pic);
+      const res = await deployToNFTStorage(
+        formValues.name,
+        formValues.bio,
+        formValues.pic
+      );
       editProfile(profileId, { ipfsHash: res.ipnft });
     } catch (error) {
       throw error;
@@ -51,8 +55,8 @@ function EditProfile({ props }) {
     setIsSaving(false);
   };
   useEffect(() => {
-    setDisplayImage(props.profileDetails.image);
-  }, [props.profileDetails]);
+    setDisplayImage(props?.profileDetails?.image);
+  }, [props?.profileDetails]);
   return (
     <Flex w={{ base: "100%", md: "50%" }} align={"left"} justify={"left"}>
       <Stack
@@ -107,7 +111,7 @@ function EditProfile({ props }) {
             onChange={(e) => {
               setFormValues({ ...formValues, name: e.target.value });
             }}
-            placeholder={props.profileDetails.name || "Name"}
+            placeholder={props?.profileDetails?.name || "Name"}
             _placeholder={{ color: "gray.500" }}
             type="text"
           />
@@ -119,7 +123,7 @@ function EditProfile({ props }) {
             onChange={(e) => {
               setFormValues({ ...formValues, bio: e.target.value });
             }}
-            placeholder={props.profileDetails.bio || "Description"}
+            placeholder={props?.profileDetails?.bio || "Description"}
           />
         </FormControl>
         <Stack spacing={6} direction={["column", "row"]}>
