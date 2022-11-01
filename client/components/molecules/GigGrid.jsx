@@ -4,7 +4,7 @@ import GigCard from "../../components/atoms/GigCard";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 
-function GigGrid({ displayData, fetchMoreData, params }) {
+function GigGrid({ displayData, fetchMoreData, params, wrap }) {
   return (
     <SimpleGrid
       as={InfiniteScroll}
@@ -14,11 +14,11 @@ function GigGrid({ displayData, fetchMoreData, params }) {
       loader={<Spinner ml={"auto"} key={0} color="red.500" />}
       style={{
         display: "flex",
-        flexWrap: "wrap",
+        flexWrap: wrap ? "wrap" : "nowrap",
         justifyContent: "space-around",
         maxHeight: "100vh",
         minHeight: "30vh",
-        overflowX: "hidden",
+        overflowX: wrap ? "hidden" : "scroll",
       }}
       className="scroll"
       minChildWidth="2xs"

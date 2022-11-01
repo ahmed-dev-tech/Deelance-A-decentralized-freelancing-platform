@@ -4,7 +4,7 @@ import OrderCard from "../../components/atoms/OrderCard";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 
-function OrderGrid({ displayData, fetchMoreData, params }) {
+function OrderGrid({ displayData, fetchMoreData, params, wrap }) {
   return (
     <SimpleGrid
       as={InfiniteScroll}
@@ -14,7 +14,7 @@ function OrderGrid({ displayData, fetchMoreData, params }) {
       loader={<Spinner ml={"auto"} key={0} color="red.500" />}
       style={{
         display: "flex",
-        flexWrap: "wrap",
+        flexWrap: wrap ? "wrap" : "nowrap",
         justifyContent: "space-around",
         maxHeight: "100vh",
         minHeight: "30vh",

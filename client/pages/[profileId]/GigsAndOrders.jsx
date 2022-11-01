@@ -132,6 +132,7 @@ function Gigs(props) {
               displayData={displayData.ownedGigs}
               fetchMoreData={fetchMoreData}
               params={"ownedGigs"}
+              wrap={true}
             />
           </Box>
         </>
@@ -149,6 +150,7 @@ function Gigs(props) {
               displayData={displayData.interestedGigs}
               fetchMoreData={fetchMoreData}
               params={"interestedGigs"}
+              wrap={true}
             />
           </Box>
         </>
@@ -166,6 +168,7 @@ function Gigs(props) {
               displayData={displayData.ownedOrders}
               fetchMoreData={fetchMoreData}
               params={"ownedOrders"}
+              wrap={true}
             />
           </Box>
         </>
@@ -183,6 +186,7 @@ function Gigs(props) {
               displayData={displayData.interestedOrders}
               fetchMoreData={fetchMoreData}
               params={"interestedOrders"}
+              wrap={true}
             />
           </Box>
         </>

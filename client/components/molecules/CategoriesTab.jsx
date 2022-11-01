@@ -31,7 +31,7 @@ function CategoriesTab(props) {
       <Tabs isLazy isFitted>
         <TabList mb="1em">
           {categories.map((_, i) => {
-            return _ != "_" && <Tab key={i}>{_}</Tab>;
+            return _.category != "_" && <Tab key={i}>{_.category}</Tab>;
           })}
         </TabList>
         {isFreelancer ? (

@@ -32,7 +32,7 @@ function Admin(props) {
     setSubCategory("");
   };
   useEffect(() => {
-    setCategory(categories[0]);
+    setCategory(categories[0]?.category);
   }, [categories]);
   return (
     <>
@@ -67,14 +67,14 @@ function Admin(props) {
           classNamePrefix="select"
           defaultValue={
             categories.map((_) => {
-              return { value: _, label: _.toUpperCase() };
+              return { value: _.category, label: _.category.toUpperCase() };
             })[0]
           }
           isClearable={true}
           isSearchable={true}
           name="category"
           options={categories.map((_) => {
-            return { value: _, label: _.toUpperCase() };
+            return { value: _.category, label: _.category.toUpperCase() };
           })}
         />
       </FormControl>
