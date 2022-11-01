@@ -21,22 +21,7 @@ const ClientTabContent = (props) => {
     <Box p={5}>
       <Heading fontSize="2xl">Tech</Heading>
       <Box py={5}>
-        {/* <InfiniteScroll
-          pageStart={0}
-          loadMore={fetchMoreGigs}
-          hasMore={true || false}
-          loader={
-            <div className="loader" key={0}>
-              Loading ...
-            </div>
-          }
-          useWindow={false}
-        > */}
-        <HStack
-          style={{ scrollbarWidth: "none" }}
-          spacing={8}
-          overflowX="scroll"
-        >
+        <HStack className="scroll" spacing={8} overflowX="scroll">
           {gigs.length ? (
             gigs.map((_, i) => {
               return <GigCard content={_} key={i} />;
@@ -45,7 +30,6 @@ const ClientTabContent = (props) => {
             <Text>There are no gigs here</Text>
           )}
         </HStack>
-        {/* </InfiniteScroll> */}
       </Box>
     </Box>
   );

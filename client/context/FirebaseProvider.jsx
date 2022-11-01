@@ -42,6 +42,7 @@ function FirebaseProvider({ children }) {
     try {
       const docRef = await addDoc(collection(db, "categories"), {
         category: newCategory,
+        subCategories: [],
       });
       makeToast(
         "Firebase Success",
@@ -50,6 +51,28 @@ function FirebaseProvider({ children }) {
       );
     } catch (error) {
       makeToast("Firebase Error", "Error adding new category", "error");
+    }
+  };
+  const addSubCategory = async (category, subCategory) => {
+    try {
+      const docRef = query(
+        collection(db, "categories"),
+        where("category", "==", category)
+      );
+      const docSnap = await getDocs(docRef);
+      let res = [];
+      docSnap.forEach((doc) => {
+        res.push(doc);
+      });
+      console.log(res[0].id);
+      if (res[0].id) {
+        const firebaseRes = await updateDoc(doc(db, "categories", res[0].id), {
+          subCategories: arrayUnion(subCategory),
+        });
+        console.log(firebaseRes);
+      }
+    } catch (error) {
+      throw error;
     }
   };
   const getCategories = async () => {
@@ -61,7 +84,7 @@ function FirebaseProvider({ children }) {
       const docSnap = await getDocs(docRef);
       let res = [];
       docSnap.forEach((doc) => {
-        res.push(doc.data().category);
+        res.push(doc.data());
       });
       makeToast(
         "Firebase Success",
@@ -525,6 +548,7 @@ function FirebaseProvider({ children }) {
     getAllProjects,
     getProjectDetails,
     approveClient,
+    addSubCategory,
   };
 
   useEffect(() => {
