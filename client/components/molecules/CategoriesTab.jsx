@@ -7,7 +7,13 @@ import {
   TabPanel,
   useDisclosure,
   Button,
+  Box,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Flex,
 } from "@chakra-ui/react";
+import { BsSearch } from "react-icons/bs";
 import ClientTabContent from "./ClientTabContent";
 import { FirebaseContext } from "../../context/FirebaseProvider";
 import EditGigModal from "./EditGigModal";
@@ -20,6 +26,8 @@ function CategoriesTab(props) {
   const { isFreelancer } = useContext(UtilitiesContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [searchValue, setSearchValue] = useState("");
+
   const [size, setSize] = useState("full");
 
   const handleSizeClick = (newSize) => {
@@ -29,25 +37,54 @@ function CategoriesTab(props) {
   return (
     <>
       <Tabs isLazy isFitted>
-        <TabList mb="1em">
+        <TabList>
           {categories.map((_, i) => {
             return _.category != "_" && <Tab key={i}>{_.category}</Tab>;
           })}
         </TabList>
-        {isFreelancer ? (
-          <EditGigModal isOpen={isOpen} onClose={onClose}>
-            <Button onClick={() => handleSizeClick(size)} m={4}>
-              Create Gig
-            </Button>
-          </EditGigModal>
-        ) : (
-          <EditOrderModal isOpen={isOpen} onClose={onClose}>
-            <Button onClick={() => handleSizeClick(size)} m={4}>
-              Post Order
-            </Button>
-          </EditOrderModal>
-        )}
 
+        <Flex p={3} bg={"gray.100"} alignItems={"end"}>
+          {isFreelancer ? (
+            <EditGigModal isOpen={isOpen} onClose={onClose}>
+              <Box
+                bg={"gray.400"}
+                h={"120px"}
+                mx={5}
+                as={Button}
+                onClick={() => handleSizeClick(size)}
+              >
+                Create Gig
+              </Box>
+            </EditGigModal>
+          ) : (
+            <Box p={3}>
+              <EditOrderModal isOpen={isOpen} onClose={onClose}>
+                <Box
+                  color={"aqua"}
+                  h={"120px"}
+                  mx={5}
+                  as={Button}
+                  onClick={() => handleSizeClick(size)}
+                >
+                  Post Order
+                </Box>
+              </EditOrderModal>
+            </Box>
+          )}
+          <InputGroup mx={5}>
+            <InputLeftElement
+              pointerEvents="none"
+              children={<BsSearch color="gray.300" />}
+            />
+            <Input
+              type="tel"
+              placeholder="Search Gigs and orders"
+              w={"xs"}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </InputGroup>
+        </Flex>
         <TabPanels>
           {categories.map((_, i) => {
             return (

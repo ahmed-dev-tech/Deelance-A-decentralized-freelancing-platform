@@ -38,7 +38,7 @@ const SellerTabContent = (props) => {
       <Box py={5}>
         {props?.category?.subCategories?.map((subCat, i) => {
           return (
-            <>
+            <Box key={i}>
               <Heading fontSize="2xl">{subCat}</Heading>
               <Box py={5}>
                 <OrderGrid
@@ -50,7 +50,7 @@ const SellerTabContent = (props) => {
                   subCat={subCat}
                 />
               </Box>
-            </>
+            </Box>
           );
         })}
       </Box>

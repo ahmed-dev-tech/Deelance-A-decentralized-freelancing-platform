@@ -30,6 +30,7 @@ const ClientTabContent = (props) => {
 
   const fetchMoreGigs = async (dataCategory) => {
     let more = await getMoreGigs(gigs.lastVisible, "rating", gigLimit);
+    console.log(more);
     setGigs({
       data: [...gigs.data, ...more.data],
       lastVisible: more.lastVisible,
@@ -42,29 +43,19 @@ const ClientTabContent = (props) => {
       {props?.category?.subCategories?.map((subCat, i) => {
         console.log(subCat);
         return (
-          <>
+          <Box key={i}>
             <Heading fontSize="2xl">{subCat}</Heading>
             <Box py={5}>
               <GigGrid
                 displayData={gigs}
                 fetchMoreData={fetchMoreGigs}
                 params={""}
-                wrap={false}
+                wrap={true}
                 filter={true}
                 subCat={subCat}
               />
-              {/* <HStack className="scroll" spacing={8} overflowX="scroll">
-                {gigs.length ? (
-                  gigs.map((_, i) => {
-                    if (_.subCategory == subCat)
-                      return <GigCard content={_} key={i} />;
-                  })
-                ) : (
-                  <Text>There are no gigs here</Text>
-                )}
-              </HStack> */}
             </Box>
-          </>
+          </Box>
         );
       })}
       {/* <Heading fontSize="2xl">Tech</Heading>
