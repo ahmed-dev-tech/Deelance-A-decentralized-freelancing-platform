@@ -99,6 +99,7 @@ function FirebaseProvider({ children }) {
   const createGig = async (
     ipfsHash,
     category,
+    subCategory,
     address,
     price,
     rating = 0,
@@ -109,6 +110,7 @@ function FirebaseProvider({ children }) {
       const docRef = await addDoc(collection(db, "gigs"), {
         ipfsHash,
         category,
+        subCategory,
         address,
         price,
         rating,
@@ -175,6 +177,7 @@ function FirebaseProvider({ children }) {
   const createOrder = async (
     ipfsHash,
     category,
+    subCategory,
     address,
     budget,
     rating = 0,
@@ -184,6 +187,7 @@ function FirebaseProvider({ children }) {
       const docRef = await addDoc(collection(db, "orders"), {
         ipfsHash,
         category,
+        subCategory,
         address,
         budget,
         rating,

@@ -38,6 +38,8 @@ function EditGigModal({ children, isOpen, onClose }) {
   const [gigFile, setGigFile] = useState({});
   const [displayImage, setDisplayImage] = useState("");
   const [gigCategory, setGigCategory] = useState("");
+  const [gigCategoryIndex, setGigCategoryIndex] = useState(0);
+  const [gigSubCategory, setGigSubCategory] = useState("");
   const [gigPrice, setGigPrice] = useState({ value: 0, token: "native" });
   // Button isLoading values
   const [isSavingGig, setIsSavingGig] = useState(false);
@@ -64,7 +66,13 @@ function EditGigModal({ children, isOpen, onClose }) {
         return;
       }
       const res = await deployToNFTStorage(gigOffer, gigDescription, gigFile);
-      await createGig(res.ipnft, gigCategory, address, gigPrice);
+      await createGig(
+        res.ipnft,
+        gigCategory,
+        gigSubCategory,
+        address,
+        gigPrice
+      );
     } catch (error) {
       throw error;
     }
@@ -86,6 +94,7 @@ function EditGigModal({ children, isOpen, onClose }) {
   // JSX Elements
   useEffect(() => {
     setGigCategory(categories[0]?.category);
+    setGigSubCategory(categories[0]?.subCategories[0]);
   }, [categories]);
   return (
     <>
@@ -150,23 +159,58 @@ function EditGigModal({ children, isOpen, onClose }) {
               <Select
                 onChange={(e) => {
                   setGigCategory(e.value);
+                  setGigCategoryIndex(e.index);
                 }}
                 className="basic-single"
                 classNamePrefix="select"
                 defaultValue={
-                  categories.map((_) => {
+                  categories.map((_, i) => {
                     return {
                       value: _.category,
                       label: _.category.toUpperCase(),
+                      index: i,
                     };
                   })[0]
                 }
                 isClearable={true}
                 isSearchable={true}
                 name="category"
-                options={categories.map((_) => {
-                  return { value: _.category, label: _.category.toUpperCase() };
+                options={categories.map((_, i) => {
+                  return {
+                    value: _.category,
+                    label: _.category.toUpperCase(),
+                    index: i,
+                  };
                 })}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Select SubCategory</FormLabel>
+              <Select
+                onChange={(e) => {
+                  setGigSubCategory(e.value);
+                }}
+                className="basic-single"
+                classNamePrefix="select"
+                defaultValue={
+                  categories[gigCategoryIndex]?.subCategories?.map((_) => {
+                    return {
+                      value: _,
+                      label: _.toUpperCase(),
+                    };
+                  })[0]
+                }
+                isClearable={true}
+                isSearchable={true}
+                name="category"
+                options={categories[gigCategoryIndex]?.subCategories?.map(
+                  (_) => {
+                    return {
+                      value: _,
+                      label: _.toUpperCase(),
+                    };
+                  }
+                )}
               />
             </FormControl>
             <FormControl isRequired>

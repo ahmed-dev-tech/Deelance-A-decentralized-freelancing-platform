@@ -38,6 +38,8 @@ function EditGigModal({ children, isOpen, onClose }) {
   const [orderFile, setOrderFile] = useState({});
   const [displayImage, setDisplayImage] = useState("");
   const [orderCategory, setOrderCategory] = useState("");
+  const [orderSubCategory, setOrderSubCategory] = useState("");
+  const [orderCategoryIndex, setOrderCategoryIndex] = useState(0);
   const [orderBudget, setOrderBudget] = useState({ value: 0, token: "native" });
   // Button isLoading values
   const [isSavingOrder, setIsSavingOrder] = useState(false);
@@ -64,7 +66,13 @@ function EditGigModal({ children, isOpen, onClose }) {
         orderDescription,
         orderFile
       );
-      await createOrder(res.ipnft, orderCategory, address, orderBudget);
+      await createOrder(
+        res.ipnft,
+        orderCategory,
+        orderSubCategory,
+        address,
+        orderBudget
+      );
     } catch (error) {
       throw error;
     }
@@ -86,6 +94,7 @@ function EditGigModal({ children, isOpen, onClose }) {
   // JSX Elements
   useEffect(() => {
     setOrderCategory(categories[0]?.category);
+    setOrderSubCategory(categories[0]?.subCategories[0]);
   }, [categories]);
   return (
     <>
@@ -148,23 +157,58 @@ function EditGigModal({ children, isOpen, onClose }) {
               <Select
                 onChange={(e) => {
                   setOrderCategory(e.value);
+                  setOrderCategoryIndex(e.index);
                 }}
                 className="basic-single"
                 classNamePrefix="select"
                 defaultValue={
-                  categories.map((_) => {
+                  categories.map((_, i) => {
                     return {
                       value: _.category,
                       label: _.category.toUpperCase(),
+                      index: i,
                     };
                   })[0]
                 }
                 isClearable={true}
                 isSearchable={true}
                 name="category"
-                options={categories.map((_) => {
-                  return { value: _.category, label: _.category.toUpperCase() };
+                options={categories.map((_, i) => {
+                  return {
+                    value: _.category,
+                    label: _.category.toUpperCase(),
+                    index: i,
+                  };
                 })}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Select SubCategory</FormLabel>
+              <Select
+                onChange={(e) => {
+                  setOrderSubCategory(e.value);
+                }}
+                className="basic-single"
+                classNamePrefix="select"
+                defaultValue={
+                  categories[orderCategoryIndex]?.subCategories?.map((_) => {
+                    return {
+                      value: _,
+                      label: _.toUpperCase(),
+                    };
+                  })[0]
+                }
+                isClearable={true}
+                isSearchable={true}
+                name="category"
+                options={categories[orderCategoryIndex]?.subCategories?.map(
+                  (_) => {
+                    return {
+                      value: _,
+                      label: _.toUpperCase(),
+                    };
+                  }
+                )}
               />
             </FormControl>
             <FormControl isRequired>

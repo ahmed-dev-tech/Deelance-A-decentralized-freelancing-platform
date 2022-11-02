@@ -133,6 +133,7 @@ function Gigs(props) {
               fetchMoreData={fetchMoreData}
               params={"ownedGigs"}
               wrap={true}
+              filter={false}
             />
           </Box>
         </>
@@ -151,6 +152,7 @@ function Gigs(props) {
               fetchMoreData={fetchMoreData}
               params={"interestedGigs"}
               wrap={true}
+              filter={false}
             />
           </Box>
         </>
@@ -169,6 +171,7 @@ function Gigs(props) {
               fetchMoreData={fetchMoreData}
               params={"ownedOrders"}
               wrap={true}
+              filter={false}
             />
           </Box>
         </>
@@ -187,6 +190,7 @@ function Gigs(props) {
               fetchMoreData={fetchMoreData}
               params={"interestedOrders"}
               wrap={true}
+              filter={false}
             />
           </Box>
         </>

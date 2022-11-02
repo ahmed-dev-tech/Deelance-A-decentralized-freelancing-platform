@@ -50,6 +50,8 @@ const ClientTabContent = (props) => {
                 fetchMoreData={fetchMoreGigs}
                 params={""}
                 wrap={false}
+                filter={true}
+                subCat={subCat}
               />
               {/* <HStack className="scroll" spacing={8} overflowX="scroll">
                 {gigs.length ? (

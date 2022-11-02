@@ -4,7 +4,17 @@ import OrderCard from "../../components/atoms/OrderCard";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 
-function OrderGrid({ displayData, fetchMoreData, params, wrap }) {
+function OrderGrid({
+  displayData,
+  fetchMoreData,
+  params,
+  wrap,
+  filter,
+  subCat,
+}) {
+  displayData = displayData.data.filter((_, i) => {
+    return !filter || (filter && _.subCategory == subCat);
+  });
   return (
     <SimpleGrid
       as={InfiniteScroll}
@@ -24,8 +34,8 @@ function OrderGrid({ displayData, fetchMoreData, params, wrap }) {
       spacing="40px"
       justifyContent={"center"}
     >
-      {displayData.data.length ? (
-        displayData.data.map((_, i) => {
+      {displayData.length ? (
+        displayData.map((_, i) => {
           return (
             <Box p={3} key={i}>
               <OrderCard content={_} />

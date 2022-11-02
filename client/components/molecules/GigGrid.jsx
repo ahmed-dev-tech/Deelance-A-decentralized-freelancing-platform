@@ -4,7 +4,10 @@ import GigCard from "../../components/atoms/GigCard";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 
-function GigGrid({ displayData, fetchMoreData, params, wrap }) {
+function GigGrid({ displayData, fetchMoreData, params, wrap, filter, subCat }) {
+  displayData = displayData.data.filter((_, i) => {
+    return !filter || (filter && _.subCategory == subCat);
+  });
   return (
     <SimpleGrid
       as={InfiniteScroll}
@@ -25,8 +28,8 @@ function GigGrid({ displayData, fetchMoreData, params, wrap }) {
       spacing="40px"
       justifyContent={"center"}
     >
-      {displayData.data.length ? (
-        displayData.data.map((_, i) => {
+      {displayData.length ? (
+        displayData.map((_, i) => {
           return (
             <Box p={3} key={i}>
               <GigCard content={_} />
