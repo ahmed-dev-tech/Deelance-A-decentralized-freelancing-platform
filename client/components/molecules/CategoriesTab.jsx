@@ -24,9 +24,10 @@ import SellerTabContent from "./SellerTabContent";
 import GigGrid from "./GigGrid";
 import axios from "axios";
 import GigCard from "../atoms/GigCard";
+import OrderCard from "../atoms/OrderCard";
 
 function CategoriesTab(props) {
-  const { categories, getGigs } = useContext(FirebaseContext);
+  const { categories, getGigs, getOrders } = useContext(FirebaseContext);
   const { isFreelancer } = useContext(UtilitiesContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -39,16 +40,23 @@ function CategoriesTab(props) {
     onOpen();
   };
   const searchData = async (e) => {
-    let gigs = await getGigs("rating", 30, null);
-    const fetchName = async (gigOrOrder) => {
+    if (e.target.value.trim() == "") {
+      setDisplayData([]);
+      return;
+    }
+    let gigsOrOrders;
+    isFreelancer
+      ? (gigsOrOrders = await getOrders("timestamp", 30, null))
+      : (gigsOrOrders = await getGigs("rating", 30, null));
+    const fetchName = async (ipfsHash) => {
       let res = await axios.get(
-        `https://${gigOrOrder.ipfsHash}.ipfs.nftstorage.link/metadata.json`
+        `https://${ipfsHash}.ipfs.nftstorage.link/metadata.json`
       );
       return res.data.name;
     };
     const allData = await Promise.all(
-      gigs.data.map(async (_) => {
-        let name = await fetchName(_);
+      gigsOrOrders.data.map(async (_) => {
+        let name = await fetchName(_.ipfsHash);
         return { ..._, name };
       })
     );
@@ -122,7 +130,11 @@ function CategoriesTab(props) {
               {displayData.map((_, i) => {
                 return (
                   <Box p={3} key={i}>
-                    <GigCard content={_} />
+                    {isFreelancer ? (
+                      <OrderCard content={_} />
+                    ) : (
+                      <GigCard content={_} />
+                    )}
                   </Box>
                 );
               })}
