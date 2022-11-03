@@ -8,7 +8,6 @@ import usdc from "../abi/polygonTokens/UsdcToken.json";
 import usdt from "../abi/polygonTokens/UsdtToken.json";
 import { useMoralis } from "react-moralis";
 import { useContext } from "react";
-import { UtilitiesContext } from "./UtilitiesProvider";
 import { FirebaseContext } from "./FirebaseProvider";
 
 export const ContractContext = createContext();
@@ -17,7 +16,6 @@ function ContractProvider({ children }) {
   const { isAuthenticated } = useMoralis();
   const web3ModalRef = useRef();
 
-  const { makeToast } = useContext(UtilitiesContext);
   const { addNewProject } = useContext(FirebaseContext);
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
@@ -59,62 +57,31 @@ function ContractProvider({ children }) {
   };
   const handleAccountChange = (accounts) => {
     setAddress(accounts[0]);
-    makeToast(
-      "Metamask success",
-      `Account has successfully been changed to ${accounts[0]}`,
-      "success"
-    );
+    window.alert(`Account has been changed to ${accounts[0]}`);
   };
 
   // Contract Interaction Functions
   const registerFreelancer = async () => {
     try {
       await contract.registerFreelancer({ gasPrice: 1000000000000 });
-      makeToast(
-        "Contract Success",
-        "Successfully registered Freelancer on chain",
-        "success"
-      );
     } catch (error) {
-      makeToast(
-        "Contract Error",
-        "An Unknown error occurred while registering this address as a freelancer",
-        "error"
-      );
+      throw error;
     }
   };
   const registerClient = async () => {
     try {
       await contract.registerClient({ gasPrice: 1000000000000 });
-      makeToast(
-        "Contract Success",
-        "Successfully registered Client on chain",
-        "success"
-      );
     } catch (error) {
-      makeToast(
-        "Contract Error",
-        "An Unknown error occurred while registering this address as a client",
-        "error"
-      );
+      throw error;
     }
   };
   const _getUserDetailsOnChain = async (address) => {
     try {
       const info = await contract.users(address);
-      makeToast(
-        "Contract Success",
-        "Successfully retrieved user details",
-        "success"
-      );
+
       return info;
     } catch (error) {
-      makeToast(
-        "Contract Error",
-        "An Unknown error occurred while retrieving user details",
-        "error"
-      );
-      return [];
+      throw error;
     }
   };
   const startProject = async (gig_orderId, address) => {
@@ -126,33 +93,17 @@ function ContractProvider({ children }) {
           gasPrice: 1000000000000,
         }
       );
-      makeToast("Contract Success", "Successfully started project", "success");
     } catch (error) {
-      console.log(error);
-      makeToast(
-        "Contract Error",
-        "An Unknown error occurred while starting project with freelancer provided",
-        "error"
-      );
+      throw error;
     }
   };
   const getProjectDetailsOnChain = async (projectId) => {
     try {
       const info = await contract.projects(projectId);
-      makeToast(
-        "Contract Success",
-        "Successfully retrieved project details",
-        "success"
-      );
+
       return info;
     } catch (error) {
-      console.log(error);
-      makeToast(
-        "Contract Error",
-        "An Unknown error occurred while retrieving project details",
-        "error"
-      );
-      return [];
+      throw error;
     }
   };
   const fundVault = async (amount, tokenAddress) => {
@@ -188,15 +139,9 @@ function ContractProvider({ children }) {
         info = await contract.fundWithERC20(amount, tokenAddress, {
           gasPrice: 100000000000,
         });
-        console.log(provider.getSigner(), info);
       }
     } catch (error) {
-      console.log(error);
-      makeToast(
-        "Contract Error",
-        "An Unknown error occurred while funding vault",
-        "error"
-      );
+      throw error;
     }
   };
   const getVaultBalance = async (
@@ -269,29 +214,11 @@ function ContractProvider({ children }) {
       } else {
         addNewProject("gigs", gig_orderIdString, projectId.toString());
       }
-      makeToast(
-        "Firebase Success",
-        "Successfully added projectId to firebase",
-        "success"
-      );
     } catch (error) {
-      makeToast(
-        "Firebase Error",
-        "An Unknown error occurred while trying to add projectId to firebase",
-        "error"
-      );
+      throw error;
     }
   });
-  // contract?.once("MilestoneAdded", (projectId, deadline, amount) => {
-  //   try {
-  //     addMilestoneToProject(collection,
-  //       gigOrderId,
-  //       projectId,
-  //       milestoneData)
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // });
+
   useEffect(() => {
     if (isAuthenticated) {
       web3ModalRef.current = new Web3Modal({
@@ -310,6 +237,7 @@ function ContractProvider({ children }) {
     address &&
       _getUserDetailsOnChain(address).then((res) => setUserDetailsOnChain(res));
   }, [address]);
+
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", handleAccountChange);
@@ -318,6 +246,7 @@ function ContractProvider({ children }) {
       };
     }
   });
+
   const data = {
     contract,
     address,

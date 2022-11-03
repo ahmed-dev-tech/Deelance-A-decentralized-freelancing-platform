@@ -26,17 +26,22 @@ import usdt from "../../abi/polygonTokens/UsdtToken.json";
 import FundVault from "../atoms/FundVault";
 import { useEffect } from "react";
 import { ethers } from "ethers";
+import { FirebaseContext } from "../../context/FirebaseProvider";
+import axios from "axios";
 
 function Navbar(props) {
   const { colorMode, toggleColorMode } = useColorMode();
   const { authenticate, isAuthenticated } = useMoralis();
   const { address, contract, getVaultBalance } = useContext(ContractContext);
   const { shortenAddress, isFreelancer } = useContext(UtilitiesContext);
+  const { getUserProfile } = useContext(FirebaseContext);
 
   const [fundInVault, setFundInVault] = useState({
     native: 0,
     stableCoins: { dai: 0, usdc: 0, usdt: 0 },
   });
+  const [profileDetails, setProfileDetails] = useState({});
+
   const getTokensBalance = async (depositorAddress) => {
     const native = await getVaultBalance(depositorAddress, "native");
     const daiBal = await getVaultBalance(depositorAddress, dai.address);
@@ -52,12 +57,41 @@ function Navbar(props) {
       },
     });
   };
+  const prepareUserProfile = async () => {
+    try {
+      const firebaseRes = await getUserProfile(address);
+      if (!firebaseRes.ipfsHash) setProfileDetails({});
+      let ipfsRes = await axios.get(
+        `https://${firebaseRes.ipfsHash}.ipfs.nftstorage.link/metadata.json`
+      );
+      const [cid, fileName] = ipfsRes.data.image.slice(7).split("/");
+      setProfileDetails({
+        ...firebaseRes,
+        name: ipfsRes.data.name,
+        bio: ipfsRes.data.description,
+        image: `https://${cid}.ipfs.nftstorage.link/${fileName}`,
+      });
+      console.log(`https://${cid}.ipfs.nftstorage.link/${fileName}`);
+    } catch (error) {
+      setProfileDetails({});
+    }
+  };
   useEffect(() => {
     address && contract && getTokensBalance(address);
   }, [contract, address]);
+  useEffect(() => {
+    address && prepareUserProfile();
+  }, [address]);
+  console.log("image", profileDetails.image);
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box
+        bg={useColorModeValue("gray.100", "gray.900")}
+        px={4}
+        pos={"sticky"}
+        top={0}
+        zIndex={10}
+      >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <Box>Deelance</Box>
 
@@ -93,7 +127,10 @@ function Navbar(props) {
                 >
                   <Avatar
                     size={"sm"}
-                    src={"https://avatars.dicebear.com/api/male/username.svg"}
+                    src={
+                      profileDetails?.image ||
+                      "https://avatars.dicebear.com/api/male/username.svg"
+                    }
                   />
                 </MenuButton>
                 <MenuList alignItems={"center"}>
@@ -101,7 +138,10 @@ function Navbar(props) {
                   <Center>
                     <Avatar
                       size={"2xl"}
-                      src={"https://avatars.dicebear.com/api/male/username.svg"}
+                      src={
+                        profileDetails?.image ||
+                        "https://avatars.dicebear.com/api/male/username.svg"
+                      }
                     />
                   </Center>
                   <br />

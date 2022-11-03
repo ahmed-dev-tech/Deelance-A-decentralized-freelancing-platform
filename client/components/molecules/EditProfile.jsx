@@ -48,7 +48,7 @@ function EditProfile({ props }) {
         formValues.bio,
         formValues.pic
       );
-      editProfile(profileId, { ipfsHash: res.ipnft });
+      editProfile(props.profileId, { ipfsHash: res.ipnft });
     } catch (error) {
       throw error;
     }

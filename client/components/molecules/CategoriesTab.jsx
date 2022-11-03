@@ -13,6 +13,7 @@ import {
   Input,
   Flex,
   SimpleGrid,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { BsSearch } from "react-icons/bs";
 import ClientTabContent from "./ClientTabContent";
@@ -73,11 +74,18 @@ function CategoriesTab(props) {
           })}
         </TabList>
 
-        <Flex p={3} bg={"gray.100"} alignItems={"end"}>
+        <Flex
+          p={3}
+          bg={useColorModeValue("gray.100", "gray.900")}
+          alignItems={"end"}
+          pos={"sticky"}
+          top={16}
+          zIndex={10}
+        >
           {isFreelancer ? (
             <EditGigModal isOpen={isOpen} onClose={onClose}>
               <Box
-                bg={"gray.400"}
+                bg={useColorModeValue("gray.400", "gray.900")}
                 h={"120px"}
                 mx={5}
                 as={Button}

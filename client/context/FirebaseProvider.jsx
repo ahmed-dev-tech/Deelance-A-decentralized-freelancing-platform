@@ -18,7 +18,6 @@ import {
   startAfter,
   arrayRemove,
 } from "firebase/firestore";
-import { UtilitiesContext } from "./UtilitiesProvider";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDwhe7bu3jE1IZcXWMjn6w_h_vT3XfO0Lo",
@@ -36,7 +35,6 @@ const db = getFirestore(app);
 
 export const FirebaseContext = createContext();
 function FirebaseProvider({ children }) {
-  const { makeToast } = useContext(UtilitiesContext);
   // firebase functions may be moved to another file later on
   const addCategory = async (newCategory) => {
     try {
@@ -44,13 +42,8 @@ function FirebaseProvider({ children }) {
         category: newCategory,
         subCategories: [],
       });
-      makeToast(
-        "Firebase Success",
-        `Successfully added new category with id ${docRef.id}`,
-        "success"
-      );
     } catch (error) {
-      makeToast("Firebase Error", "Error adding new category", "error");
+      throw error;
     }
   };
   const addSubCategory = async (category, subCategory) => {
@@ -86,14 +79,10 @@ function FirebaseProvider({ children }) {
       docSnap.forEach((doc) => {
         res.push(doc.data());
       });
-      makeToast(
-        "Firebase Success",
-        `Successfully got all categories`,
-        "success"
-      );
+
       return res;
     } catch (error) {
-      makeToast("Firebase Error", "Error getting categories", "error");
+      throw error;
     }
   };
   const createGig = async (
@@ -118,13 +107,8 @@ function FirebaseProvider({ children }) {
         approvedClients,
         timestamp: Date.now(),
       });
-      makeToast(
-        "Firebase Success",
-        `Successfully created new gig with id ${docRef.id}`,
-        "success"
-      );
     } catch (error) {
-      makeToast("Firebase Error", "Error creating gig", "error");
+      throw error;
     }
   };
   const updateGig = async (gigId, dataObject) => {
@@ -133,11 +117,10 @@ function FirebaseProvider({ children }) {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const firebaseRes = await updateDoc(docRef, dataObject);
-        makeToast("Firebase Success", `Successfully updated gig`, "success");
         return firebaseRes;
       }
     } catch (error) {
-      makeToast("Firebase Error", "Error updating Gig", "error");
+      throw error;
     }
   };
   const getGigs = async (order = "rating", lim = 10, condition = null) => {
@@ -158,11 +141,7 @@ function FirebaseProvider({ children }) {
       docSnap.forEach((doc) => {
         res.push(doc);
       });
-      makeToast(
-        "Firebase Success",
-        `Successfully retrieved all gigs`,
-        "success"
-      );
+
       return {
         data: res.map((doc) => {
           return { ...doc.data(), id: doc.id };
@@ -170,8 +149,7 @@ function FirebaseProvider({ children }) {
         lastVisible: res[res.length - 1],
       };
     } catch (error) {
-      console.log(error);
-      makeToast("Firebase Error", "Error getting gigs", "error");
+      throw error;
     }
   };
   const createOrder = async (
@@ -194,13 +172,8 @@ function FirebaseProvider({ children }) {
         biddersArray,
         timestamp: Date.now(),
       });
-      makeToast(
-        "Firebase Success",
-        `Successfully added new order with id ${docRef.id}`,
-        "success"
-      );
     } catch (error) {
-      makeToast("Firebase Error", "Error creating order", "error");
+      throw error;
     }
   };
   const getOrders = async (order = "timestamp", lim = 10, condition = null) => {
@@ -221,11 +194,6 @@ function FirebaseProvider({ children }) {
       docSnap.forEach((doc) => {
         res.push(doc);
       });
-      makeToast(
-        "Firebase Success",
-        `Successfully retrieved all orders`,
-        "success"
-      );
       return {
         data: res.map((doc) => {
           return { ...doc.data(), id: doc.id };
@@ -233,28 +201,20 @@ function FirebaseProvider({ children }) {
         lastVisible: res[res.length - 1],
       };
     } catch (error) {
-      console.log(error);
-      makeToast("Firebase Error", "Error getting orders", "error");
+      throw error;
     }
   };
   const fetchGigDetails = async (gigId) => {
     try {
-      console.log("gigId:", gigId);
       const docRef = doc(db, "gigs", gigId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        makeToast(
-          "Firebase Success",
-          `Successfully fetched gig details`,
-          "success"
-        );
         return docSnap.data();
       } else {
-        makeToast("Firebase Warning", `Document does not exist`, "warning");
         return {};
       }
     } catch (error) {
-      makeToast("Firebase Error", "Error fetching gig details", "error");
+      throw error;
     }
   };
   const editProfile = async (address, dataObject) => {
@@ -264,11 +224,6 @@ function FirebaseProvider({ children }) {
       let firebaseRes;
       if (docSnap.exists()) {
         firebaseRes = await updateDoc(docRef, dataObject);
-        makeToast(
-          "Firebase Success",
-          `Successfully updated profile`,
-          "success"
-        );
       } else {
         firebaseRes = await setDoc(docRef, {
           ...dataObject,
@@ -277,14 +232,9 @@ function FirebaseProvider({ children }) {
           clientReviewers: [],
           sellerReviewers: [],
         });
-        makeToast(
-          "Firebase Success",
-          `Successfully created new profile`,
-          "success"
-        );
       }
     } catch (error) {
-      makeToast("Firebase Error", "Error editing profile", "error");
+      throw error;
     }
   };
   const getUserProfile = async (address) => {
@@ -292,38 +242,25 @@ function FirebaseProvider({ children }) {
       const docRef = doc(db, "profiles", address);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        makeToast(
-          "Firebase Success",
-          `Successfully retrieved user profile`,
-          "success"
-        );
         return docSnap.data();
       } else {
-        makeToast("Firebase Warning", `Document does not exist`, "warning");
         return {};
       }
     } catch (error) {
-      makeToast("Firebase Error", "Error getting user profile", "error");
+      throw error;
     }
   };
   const fetchOrderDetails = async (orderId) => {
     try {
-      console.log("orderId:", orderId);
       const docRef = doc(db, "orders", orderId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        makeToast(
-          "Firebase Success",
-          `Successfully fetched order details`,
-          "success"
-        );
         return docSnap.data();
       } else {
-        makeToast("Firebase Warning", `Document does not exist`, "warning");
         return {};
       }
     } catch (error) {
-      makeToast("Firebase Error", "Error fetching order details", "error");
+      throw error;
     }
   };
   const updateOrder = async (orderId, dataObject) => {
@@ -332,31 +269,28 @@ function FirebaseProvider({ children }) {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const firebaseRes = await updateDoc(docRef, dataObject);
-        makeToast("Firebase Success", `Successfully updated order`, "success");
         return firebaseRes;
       }
     } catch (error) {
-      makeToast("Firebase Error", "Error updating order", "error");
+      throw error;
     }
   };
   const deleteGig = async (gigId) => {
     try {
       const docRef = doc(db, "gigs", gigId);
       const res = await deleteDoc(docRef);
-      makeToast("Firebase Success", `Successfully deleted gig`, "success");
       return res;
     } catch (error) {
-      makeToast("Firebase Error", "Error deleting gig", "error");
+      throw error;
     }
   };
   const deleteOrder = async (orderId) => {
     try {
       const docRef = doc(db, "orders", orderId);
       const res = await deleteDoc(docRef);
-      makeToast("Firebase Success", `Successfully deleted order`, "success");
       return res;
     } catch (error) {
-      makeToast("Firebase Error", "Error deleting order", "error");
+      throw error;
     }
   };
   const addNewProject = async (collection, gigOrderId, projectId) => {
@@ -419,18 +353,8 @@ function FirebaseProvider({ children }) {
       await updateDoc(docRef, {
         [arrayField]: arrayUnion(parameter),
       });
-      makeToast(
-        "Firebase Success",
-        `Successfully added to ${arrayField} list`,
-        "success"
-      );
     } catch (error) {
-      console.log(error);
-      makeToast(
-        "Firebase Error",
-        `Error adding to ${arrayField} array`,
-        "error"
-      );
+      throw error;
     }
   };
   const approveClient = async (gigId, clientAddress) => {
@@ -451,7 +375,6 @@ function FirebaseProvider({ children }) {
     condition = null
   ) => {
     try {
-      console.log(lastVisible, order, lim, condition);
       let docRef;
       if (condition == null) {
         docRef = query(
@@ -482,8 +405,7 @@ function FirebaseProvider({ children }) {
         lastVisible: res[res.length - 1],
       };
     } catch (error) {
-      console.log(error);
-      makeToast("Firebase Error", "Couldn't fetch more gigs", "error");
+      throw error;
     }
   };
   const getMoreOrders = async (
@@ -522,8 +444,7 @@ function FirebaseProvider({ children }) {
         lastVisible: res[res.length - 1],
       };
     } catch (error) {
-      console.log(error);
-      makeToast("Firebase Error", "Couldn't fetch more orders", "error");
+      throw error;
     }
   };
   const [categories, setCategories] = useState([]);
