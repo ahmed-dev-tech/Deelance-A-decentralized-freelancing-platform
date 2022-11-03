@@ -17,11 +17,13 @@ function ContractProvider({ children }) {
   const web3ModalRef = useRef();
 
   const { addNewProject } = useContext(FirebaseContext);
+
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState(null);
   const [userDetailsOnChain, setUserDetailsOnChain] = useState([]);
 
+  let chainId;
   // contract address is rinkeby's
   const getProviderOrSigner = async (needSigner = false) => {
     // We need to gain access to the provider/signer from metamask
@@ -30,7 +32,7 @@ function ContractProvider({ children }) {
 
     // If the user is not connected to Mumbai, tell to switch to Mumbai
 
-    const { chainId } = await web3Provider.getNetwork();
+    chainId = await web3Provider.getNetwork();
     if (chainId !== 1337) {
       window.alert("Please switch to the Mumbai network");
       throw new Error("Incorrect network");
@@ -131,11 +133,9 @@ function ContractProvider({ children }) {
             break;
         }
         tokenContract = await getContract(tokenAddress, tokenAbi);
-        console.log("here1");
         await tokenContract.approve(contract.address, amount, {
           gasPrice: 100000000000,
         });
-        console.log("here2");
         info = await contract.fundWithERC20(amount, tokenAddress, {
           gasPrice: 100000000000,
         });
@@ -250,6 +250,7 @@ function ContractProvider({ children }) {
   const data = {
     contract,
     address,
+    chainId,
     registerFreelancer,
     registerClient,
     userDetailsOnChain,

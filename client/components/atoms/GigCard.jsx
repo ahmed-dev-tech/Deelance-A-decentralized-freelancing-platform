@@ -16,7 +16,7 @@ import Rating from "./Rating";
 import { FiExternalLink } from "react-icons/fi";
 
 function GigCard({ content }) {
-  const { shortenAddress, shortenText } = useContext(UtilitiesContext);
+  const { shortenAddress, shortenText, tokens } = useContext(UtilitiesContext);
 
   const [gigName, setGigName] = useState("");
   const [gigImage, setGigImage] = useState("");
@@ -78,7 +78,7 @@ function GigCard({ content }) {
           />
           <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
             <Box as="span" color={"gray.600"} fontSize="lg">
-              ${/* content.price.token */}
+              {content?.price?.token}
             </Box>
             {content?.price?.value}
           </Box>

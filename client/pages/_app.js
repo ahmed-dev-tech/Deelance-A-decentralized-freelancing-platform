@@ -13,15 +13,15 @@ function MyApp({ Component, pageProps }) {
       serverUrl={process.env.NEXT_PUBLIC_SERVER_URL}
     >
       <ChakraProvider resetCSS>
-        <UtilitiesProvider>
-          <FirebaseProvider>
-            <ContractProvider>
+        <FirebaseProvider>
+          <ContractProvider>
+            <UtilitiesProvider>
               <NFTStorageProvider>
                 <Component {...pageProps} />
               </NFTStorageProvider>
-            </ContractProvider>
-          </FirebaseProvider>
-        </UtilitiesProvider>
+            </UtilitiesProvider>
+          </ContractProvider>
+        </FirebaseProvider>
       </ChakraProvider>
     </MoralisProvider>
   );

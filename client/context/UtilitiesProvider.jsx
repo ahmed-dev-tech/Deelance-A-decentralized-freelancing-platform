@@ -1,12 +1,18 @@
 import { useToast } from "@chakra-ui/react";
 import React, { createContext, useState } from "react";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { ContractContext } from "./ContractProvider";
 
 export const UtilitiesContext = createContext();
 
 function UtilitiesProvider({ children }) {
+  const { chainId } = useContext(ContractContext);
+
   const toast = useToast();
   const [isFreelancer, setIsFreelancer] = useState(false);
-  const mumbaiTokens = [
+
+  const polygonTokens = [
     {
       value: "native",
       label: "MATIC",
@@ -28,6 +34,7 @@ function UtilitiesProvider({ children }) {
       icon: "https://polygonscan.com/token/images/tether_32.png",
     },
   ];
+
   const shortenAddress = (address) => {
     return `${address.slice(0, 5)}...${address.slice(38, 42)}`;
   };
@@ -48,13 +55,21 @@ function UtilitiesProvider({ children }) {
       });
     }
   };
+  let tokens = {
+    polygonTokens,
+    mumbaiTokens,
+    binanceTokens,
+    binanceTestTokens,
+    fantomTokens,
+    fantomTestTokens,
+  };
   const data = {
     shortenAddress,
     shortenText,
     isFreelancer,
     setIsFreelancer,
-    mumbaiTokens,
     makeToast,
+    tokens,
   };
   return (
     <UtilitiesContext.Provider value={data}>
