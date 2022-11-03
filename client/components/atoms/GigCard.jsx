@@ -31,7 +31,7 @@ function GigCard({ content }) {
   };
   useEffect(() => {
     fetchMetaData();
-  }, []);
+  }, [content]);
   return (
     <Box
       maxW="xs"

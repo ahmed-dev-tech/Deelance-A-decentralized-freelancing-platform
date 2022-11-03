@@ -12,6 +12,7 @@ import {
   InputLeftElement,
   Input,
   Flex,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { BsSearch } from "react-icons/bs";
 import ClientTabContent from "./ClientTabContent";
@@ -20,19 +21,40 @@ import EditGigModal from "./EditGigModal";
 import EditOrderModal from "./EditOrderModal";
 import { UtilitiesContext } from "../../context/UtilitiesProvider";
 import SellerTabContent from "./SellerTabContent";
+import GigGrid from "./GigGrid";
+import axios from "axios";
+import GigCard from "../atoms/GigCard";
 
 function CategoriesTab(props) {
-  const { categories } = useContext(FirebaseContext);
+  const { categories, getGigs } = useContext(FirebaseContext);
   const { isFreelancer } = useContext(UtilitiesContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [searchValue, setSearchValue] = useState("");
+  const [displayData, setDisplayData] = useState([]);
 
   const [size, setSize] = useState("full");
 
   const handleSizeClick = (newSize) => {
     setSize(newSize);
     onOpen();
+  };
+  const searchData = async (e) => {
+    let gigs = await getGigs("rating", 30, null);
+    const fetchName = async (gigOrOrder) => {
+      let res = await axios.get(
+        `https://${gigOrOrder.ipfsHash}.ipfs.nftstorage.link/metadata.json`
+      );
+      return res.data.name;
+    };
+    const allData = await Promise.all(
+      gigs.data.map(async (_) => {
+        let name = await fetchName(_);
+        return { ..._, name };
+      })
+    );
+    const filteredData = allData.filter((_) => _.name.includes(e.target.value));
+    setDisplayData(filteredData);
+    console.log("filtered,", displayData);
   };
   return (
     <>
@@ -60,7 +82,7 @@ function CategoriesTab(props) {
             <Box p={3}>
               <EditOrderModal isOpen={isOpen} onClose={onClose}>
                 <Box
-                  color={"aqua"}
+                  bg={"gray.400"}
                   h={"120px"}
                   mx={5}
                   as={Button}
@@ -80,23 +102,44 @@ function CategoriesTab(props) {
               type="tel"
               placeholder="Search Gigs and orders"
               w={"xs"}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={searchData}
             />
           </InputGroup>
         </Flex>
         <TabPanels>
-          {categories.map((_, i) => {
-            return (
-              <TabPanel key={i}>
-                {isFreelancer ? (
-                  <SellerTabContent category={_} />
-                ) : (
-                  <ClientTabContent category={_} />
-                )}
-              </TabPanel>
-            );
-          })}
+          {displayData.length ? (
+            <SimpleGrid
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-around",
+              }}
+              className="scroll"
+              minChildWidth="2xs"
+              spacing="40px"
+              justifyContent={"center"}
+            >
+              {displayData.map((_, i) => {
+                return (
+                  <Box p={3} key={i}>
+                    <GigCard content={_} />
+                  </Box>
+                );
+              })}
+            </SimpleGrid>
+          ) : (
+            categories.map((_, i) => {
+              return (
+                <TabPanel key={i}>
+                  {isFreelancer ? (
+                    <SellerTabContent category={_} />
+                  ) : (
+                    <ClientTabContent category={_} />
+                  )}
+                </TabPanel>
+              );
+            })
+          )}
         </TabPanels>
       </Tabs>
     </>
