@@ -18,17 +18,15 @@ import {
   startAfter,
   arrayRemove,
 } from "firebase/firestore";
-
 const firebaseConfig = {
-  apiKey: "AIzaSyDwhe7bu3jE1IZcXWMjn6w_h_vT3XfO0Lo",
-  authDomain: "deelance-c6840.firebaseapp.com",
-  projectId: "deelance-c6840",
-  storageBucket: "deelance-c6840.appspot.com",
-  messagingSenderId: "409641671389",
-  appId: "1:409641671389:web:c8446a72078b671c159934",
-  measurementId: "G-ERD28JV8ZG",
+  apiKey: "AIzaSyCDS1M946CIs2M5nvQZa0ookXcKbXwoDqw",
+  authDomain: "delancer-a0a85.firebaseapp.com",
+  projectId: "delancer-a0a85",
+  storageBucket: "delancer-a0a85.appspot.com",
+  messagingSenderId: "888855229580",
+  appId: "1:888855229580:web:af225ff6be75ce83c8f7a9",
+  measurementId: "G-ZZQXC9X2S9",
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

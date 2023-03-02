@@ -57,11 +57,11 @@ function UtilitiesProvider({ children }) {
   };
   let tokens = {
     polygonTokens,
-    mumbaiTokens,
-    binanceTokens,
-    binanceTestTokens,
-    fantomTokens,
-    fantomTestTokens,
+    // mumbaiTokens,
+    // binanceTokens,
+    // binanceTestTokens,
+    // fantomTokens,
+    // fantomTestTokens,
   };
   const data = {
     shortenAddress,

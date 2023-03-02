@@ -31,7 +31,7 @@ function EditGigModal({ children, isOpen, onClose }) {
   const { categories, createOrder } = useContext(FirebaseContext);
   const { deployToNFTStorage } = useContext(NFTStorageContext);
   const { address } = useContext(ContractContext);
-  const { mumbaiTokens } = useContext(UtilitiesContext);
+  const { polygonTokens } = useContext(UtilitiesContext);
   // Form values
   const [orderOffer, setOrderOffer] = useState("");
   const [orderDescription, setOrderDescription] = useState("");
@@ -228,11 +228,11 @@ function EditGigModal({ children, isOpen, onClose }) {
                   }
                   className="basic-single"
                   classNamePrefix="select"
-                  defaultValue={mumbaiTokens[0]}
+                  // defaultValue={polygonTokens[0]}
                   isClearable={true}
                   isSearchable={true}
                   name="category"
-                  options={mumbaiTokens}
+                  options={polygonTokens}
                 />
               </Flex>
             </FormControl>
