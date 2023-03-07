@@ -59,6 +59,8 @@ function ContractProvider({ children }) {
   };
   const handleAccountChange = (accounts) => {
     setAddress(accounts[0]);
+    console.log('address', address)
+    console.log('accounts', accounts)
     window.alert(`Account has been changed to ${accounts[0]}`);
   };
 
@@ -77,6 +79,7 @@ function ContractProvider({ children }) {
       throw error;
     }
   };
+
   const _getUserDetailsOnChain = async (address) => {
     try {
       const info = await contract.users(address);
@@ -231,12 +234,12 @@ function ContractProvider({ children }) {
       );
       getAccounts().then((res) => setAddress(res));
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated,address]);
 
   useEffect(() => {
-    address &&
+    address && contract &&
       _getUserDetailsOnChain(address).then((res) => setUserDetailsOnChain(res));
-  }, [address]);
+  }, [address,contract]);
 
   useEffect(() => {
     if (window.ethereum) {

@@ -35,7 +35,7 @@ function Navbar(props) {
   const { address, contract, getVaultBalance } = useContext(ContractContext);
   const { shortenAddress, isFreelancer } = useContext(UtilitiesContext);
   const { getUserProfile } = useContext(FirebaseContext);
-
+  console.log('address', address)
   const [fundInVault, setFundInVault] = useState({
     native: 0,
     stableCoins: { dai: 0, usdc: 0, usdt: 0 },

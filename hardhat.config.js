@@ -16,14 +16,14 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: polygonFork,
+        url: ethFork,
         blockNumber: 34290177,
       },
-      chainId: 1337, // We set 1337 to make interacting with MetaMask simpler
+      chainId: 5, // We set 1337 to make interacting with MetaMask simpler
     },
     development: {
       url: "http://127.0.0.1:8545",
-      chainId: 1337,
+      chainId: 5,
     },
   },
 };
